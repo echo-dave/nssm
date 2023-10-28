@@ -2,32 +2,11 @@ import { cpus, loadavg, freemem, totalmem } from 'node:os'
 import chalk from 'chalk'
 import { processList } from './csv.js'
 import { log } from 'node:console'
-import sound from 'sound-play'
 const alert2 = chalk.bgRedBright.whiteBright.bold
 const alert = chalk.bgYellow.bold
 const warn = chalk.yellow.bgBlack
+const info = chalk.black.bgWhiteBright
 
-let audioAlertAvailable = true
-async function audioAlert() {
-  function playAlert() {
-    sound.play('audio/alert.mp3', function (err) {
-      if (err) throw err
-    })
-  }
-  if (audioAlertAvailable == true) {
-    playAlert()
-    setTimeout(() => {
-      playAlert()
-    }, 250)
-    audioAlertAvailable = false
-    setTimeout(() => {
-      audioAlertAvailable = true
-    }, 300000)
-  }
-}
-
-// const avgLoad = setInterval(()=>console.log(loadavg()), 2000)
-// console.log(cpus())
 const getCpuUsage = async () => {
   const cpuData = cpus()
   let accumulator = { user: 0, sys: 0, idle: 0 }
@@ -67,9 +46,8 @@ setInterval(async () => {
   console.clear()
   switch (true) {
     case usedMem > 0.5:
-      // log('start process logging for ram')
+      log(info(' Process logging for ram '))
       processList('mem')
-      audioAlert()
     case usedMem > 0.85:
       log(alert2(`Ram use getting critical ${usedMem}`))
       break
@@ -85,9 +63,8 @@ setInterval(async () => {
 
   switch (true) {
     case cpu > 0.5:
-      // log('star process logging for cpu')
+      log(info(' Process logging for cpu '))
       processList('cpu')
-      audioAlert()
     case cpu > 0.85:
       log(alert2(`CPU use getting critical ${cpu}`))
       break
@@ -100,7 +77,6 @@ setInterval(async () => {
     default:
       break
   }
-  // processList("mem")
   if (cpu > 0.6) log(warn(`high cpu use!! ${cpu}`))
 
   log(report)
