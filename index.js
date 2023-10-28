@@ -1,11 +1,31 @@
 import {cpus, loadavg, freemem, totalmem } from 'node:os';
 import chalk from 'chalk';
-// import {processList} from "./csv.js";
-import { error, log } from 'node:console';
-import { truncate } from 'node:fs';
-const alert2 = chalk.bgRedBright.bold
+import {processList} from "./csv.js";
+import {log} from 'node:console';
+import sound from 'sound-play';
+const alert2 = chalk.bgRedBright.whiteBright.bold
 const alert = chalk.bgYellow.bold
 const warn = chalk.yellow.bgBlack
+
+let audioAlertAvailable = true
+async function audioAlert() {
+    function playAlert() {
+        sound.play('audio/alert.mp3', function(err){
+                if (err) throw err
+            })
+    }
+    if (audioAlertAvailable == true) {
+        playAlert()
+        setTimeout(()=>{
+            playAlert()
+        },250)
+        audioAlertAvailable = false
+        setTimeout(()=>{
+            audioAlertAvailable = true
+        },300000)
+    }
+
+}
 
 // const avgLoad = setInterval(()=>console.log(loadavg()), 2000)
 // console.log(cpus())
@@ -41,8 +61,12 @@ const systemUsage = async () =>  {
 setInterval(async ()=>{
     const report =  await systemUsage()
     const {usedMem, freeMem, cpu, time} = report
-    
+    console.clear();
     switch (true) {
+        case usedMem > .50 :
+            // log('start process logging for ram')
+            processList("mem")
+            audioAlert()
         case usedMem > .85:
             log(alert2(`Ram use getting critical ${usedMem}`))
             break
@@ -51,6 +75,24 @@ setInterval(async ()=>{
             break
         case usedMem > .50 :
             log(warn(`Ram use getting high`))
+            break
+        default:
+            break;
+    }
+
+    switch (true) {
+        case cpu > .50 :
+            // log('star process logging for cpu')
+            processList("cpu")
+            audioAlert()
+        case cpu > .85:
+            log(alert2(`CPU use getting critical ${cpu}`))
+            break
+        case cpu > .70 :
+            log(alert(`High CPU use!! ${cpu}`))
+            break
+        case cpu > .50 :
+            log(warn(`CPU use getting high`))
             break
         default:
             break;
