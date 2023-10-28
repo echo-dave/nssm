@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Node simple system monitoring",
   "main": "index.js",
-  "engines": {"node": "^20.9.0"},
+  "engines": {
+    "node": "^20.9.0"
+  },
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
