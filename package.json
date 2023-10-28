@@ -1,0 +1,16 @@
+{
+  "name": "nodesysmon",
+  "version": "1.0.0",
+  "description": "Node simple system monitoring",
+  "main": "index.js",
+  "engines": {"node": "^20.9.0"},
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.3.0"
+  }
+}
