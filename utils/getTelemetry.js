@@ -2,6 +2,7 @@ import { cpus, freemem, totalmem, hostname, type, version } from 'node:os'
 import chalk from 'chalk'
 import { processList } from './getProcs.js'
 import { log } from 'node:console'
+import sendData from '../api/tsData.js'
 const alert2 = chalk.bgRedBright.whiteBright.bold
 const alert = chalk.bgYellow.bold
 const warn = chalk.yellow.bgBlack
@@ -120,7 +121,10 @@ Time:\t\t ${chalk.magenta(time)}
       }
       if (report.processes && JSON.stringify(report.processes) == '{}')
         delete report.processes
-      console.dir(report, { depth: null, colors: true })
+      // console.dir(report, { depth: null, colors: true })
+      sendData(report)
+
+
     }
   }, 2000)
 }
