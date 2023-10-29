@@ -6,7 +6,7 @@ import { log } from 'node:console'
 
 function processList(sortProcess, osType) {
   let processSort
-  if (osType = "Linux") {
+  if (osType === "Linux") {
     processSort =
     sortProcess === 'cpu'
       ? spawn('scripts/psCPU_unbuntu.bash')
