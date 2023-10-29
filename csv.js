@@ -4,13 +4,21 @@ const head = spawn('head', ['-n', '10'])
 const awk = spawn('awk', [`{print $1"\t"$2"\t"$3"\t"$4"\t"$5" "$6" "$7" "$8}`])
 import { log } from 'node:console'
 
-function processList(sortProcess) {
-  let processSort =
+function processList(sortProcess, osType) {
+  let processSort
+  if (osType = "Linux") {
+    processSort =
+    sortProcess === 'cpu'
+      ? spawn('scripts/psCPU_unbuntu.bash')
+      : spawn('scripts/psMem_unbuntu.bash')
+  } else {
+  processSort =
     sortProcess === 'cpu'
       ? spawn('scripts/psCPU.bash')
       : spawn('scripts/psMem.bash')
-  function runScripts() {
-    processSort.stdout.on('data', (data) => {
+  }
+  
+  processSort.stdout.on('data', (data) => {
       data = data.toString()
       data = data.split('\n')
       const labels = ['cpu', 'mem', 'pid', 'time', 'user', 'process']
@@ -35,17 +43,9 @@ function processList(sortProcess) {
       dbObject.shift()
       // log(dbObject)
     })
-  }
-  runScripts()
-  processSort.stderr.on('data', (data) => {
-    log('trying')
-    processSort =
-      sortProcess === 'cpu'
-        ? spawn('scripts/psCPU_unbuntu.bash')
-        : spawn('scripts/psMem_unbuntu.bash')
-    runScripts()
-    processSort.stderr.on('data', (data) => console.error(data.toString()))
-  })
+
+  processSort.stderr.on('data', (data) => console.error(data.toString()))
+
 }
 
 export { processList }

@@ -1,4 +1,4 @@
-import { cpus, loadavg, freemem, totalmem, hostname } from 'node:os'
+import { cpus, freemem, totalmem, hostname, type, version } from 'node:os'
 import chalk from 'chalk'
 import { processList } from './csv.js'
 import { log } from 'node:console'
@@ -49,7 +49,9 @@ setInterval(async () => {
 report.hostname = hostname()
 //   log(report)
   log(`Hostname:\t ${chalk.greenBright(hostname())}
-Used Mem:\t ${usedMem*100}%
+OS:\t\t ${type()} \n\t\t ${version()}
+Total Mem: \t ${(totalmem/1_000_000).toFixed(2)}M
+Used Mem:\t ${(usedMem*100).toFixed(2)}%
 Free Mem:\t ${freeMem}M
 CPU Usage:\t ${cpu*100}%
 Time:\t\t ${chalk.magenta(time)}
@@ -59,7 +61,7 @@ Time:\t\t ${chalk.magenta(time)}
   switch (true) {
     case usedMem > 0.5:
       log(info(' Process logging for ram '))
-      processList('mem')
+      processList('mem', type())
     case usedMem > 0.85:
       log(alert2(`Ram use getting critical ${usedMem}`))
       break
