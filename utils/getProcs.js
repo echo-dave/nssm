@@ -4,12 +4,10 @@ const head = spawn('head', ['-n', '10'])
 const awk = spawn('awk', [`{print $1"\t"$2"\t"$3"\t"$4"\t"$5" "$6" "$7" "$8}`])
 import { log } from 'node:console'
 
-
-
 async function processList(sortProcess, osType, isHeadless) {
   let dbObject = []
-let cpuObject = []
- 
+  let cpuObject = []
+
   let processSort
   if (osType === 'Linux') {
     processSort =
@@ -31,14 +29,16 @@ let cpuObject = []
     // dbObject = []
     // cpuObject = []
 
-    for (let i = 0; i < data.length -1; i++) {
+    for (let i = 0; i < data.length - 1; i++) {
       data[i] = data[i].split(',')
       let buildArray = []
       for (let j = 0; j < data[i].length; j++) {
         buildArray.push({ [labels[j]]: data[i][j] })
       }
 
-      sortProcess === 'mem' ? dbObject.push(buildArray) : cpuObject.push(buildArray)
+      sortProcess === 'mem'
+        ? dbObject.push(buildArray)
+        : cpuObject.push(buildArray)
     }
 
     //format terminal output
@@ -54,10 +54,9 @@ let cpuObject = []
     }
     sortProcess === 'mem' ? dbObject.shift() : cpuObject.shift()
     // log(cpuObject)
-
   })
   // sortProcess === 'cpu' ? log('cpu: \n', cpuObject) : log('mem: \n', dbObject)
-    return await sortProcess === 'mem' ? dbObject : cpuObject
+  return (await sortProcess) === 'mem' ? dbObject : cpuObject
 
   processSort.stderr.on('data', (data) => console.error(data.toString()))
 }

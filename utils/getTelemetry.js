@@ -118,10 +118,9 @@ Time:\t\t ${chalk.magenta(time)}
           report.processes.mem = memProcs.shift()
         }
       }
-      if (report.processes && JSON.stringify(report.processes) == '{}') delete report.processes
+      if (report.processes && JSON.stringify(report.processes) == '{}')
+        delete report.processes
       console.dir(report, { depth: null, colors: true })
-      
     }
   }, 2000)
 }
-
