@@ -33,7 +33,16 @@ async function processList(sortProcess, osType, isHeadless) {
       data[i] = data[i].split(',')
       let buildArray = []
       for (let j = 0; j < data[i].length; j++) {
-        buildArray.push({ [labels[j]]: data[i][j] })
+        // buildArray.push({ [labels[j]]: data[i][j] })
+         buildArray.push({
+            cpu: Number(data[i][0]),
+            mem: Number(data[i][1]),
+            pid: Number(data[i][2]),
+            time: data[i][3],
+            user: data[i][4],
+            process: data[i][5],
+          })
+        
       }
 
       sortProcess === 'mem'

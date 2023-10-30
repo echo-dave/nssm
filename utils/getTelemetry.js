@@ -36,9 +36,9 @@ const systemUsage = async () => {
   return {
     time: timeStamp,
     meta: {},
-    usedMem: mem.usedMem,
-    freeMem: mem.freeMem,
-    cpu: cpu.cpu,
+    usedMem: Number(mem.usedMem),
+    freeMem: Number(mem.freeMem),
+    cpu: Number(cpu.cpu),
   }
 }
 
@@ -105,7 +105,7 @@ Time:\t\t ${chalk.magenta(time)}
         cpuProcs.push(tmp)
         // log("tmp: ",cpuProcs)
         if (cpuProcs.length > 1) {
-          log(chalk.red('cpu \n'))
+          // log(chalk.red('cpu \n'))
           report.processes.cpu = cpuProcs.shift()
         }
       }
@@ -115,7 +115,7 @@ Time:\t\t ${chalk.magenta(time)}
         // log(chalk.red("tmp: "),memProcs)
 
         if (memProcs.length > 2) {
-          log(chalk.red('mem \n'))
+          // log(chalk.red('mem \n'))
           report.processes.mem = memProcs.shift()
         }
       }
