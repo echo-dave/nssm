@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { MongoClient, ServerApiVersion } from 'mongodb'
 import chalk from 'chalk'
 const info = (string) => console.log(chalk.yellowBright.bgBlack(string))
