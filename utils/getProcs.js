@@ -3,6 +3,8 @@ const ps = spawn('ps', ['-axcmo', '%cpu,%mem,pid,time,user,comm'])
 const head = spawn('head', ['-n', '10'])
 const awk = spawn('awk', [`{print $1"\t"$2"\t"$3"\t"$4"\t"$5" "$6" "$7" "$8}`])
 import { log } from 'node:console'
+import chalk from 'chalk'
+
 
 async function processList(sortProcess, osType, isHeadless) {
   let dbObject = []
@@ -26,42 +28,47 @@ async function processList(sortProcess, osType, isHeadless) {
     data = data.split('\n')
 
     const labels = ['cpu', 'mem', 'pid', 'time', 'user', 'process']
+    let headers = {}
+    labels.forEach(el => headers[el] = el)
     // dbObject = []
     // cpuObject = []
 
-    for (let i = 0; i < data.length - 1; i++) {
+    for (let i = 1; i < data.length - 1; i++) {
       data[i] = data[i].split(',')
-      let buildArray = []
-      for (let j = 0; j < data[i].length; j++) {
+      
+      // for (let j = 0; j < data[i].length; j++) {
         // buildArray.push({ [labels[j]]: data[i][j] })
-         buildArray.push({
+        let buildObject = {
             cpu: Number(data[i][0]),
             mem: Number(data[i][1]),
             pid: Number(data[i][2]),
             time: data[i][3],
             user: data[i][4],
             process: data[i][5],
-          })
+         }
         
-      }
+      
 
       sortProcess === 'mem'
-        ? dbObject.push(buildArray)
-        : cpuObject.push(buildArray)
+        ? dbObject.push(buildObject)
+        : cpuObject.push(buildObject)
     }
 
     //format terminal output
     if (!isHeadless) {
-      dbObject.forEach((row) => {
-        log(
-          `${row[0].cpu}\t${row[1].mem}\t${row[2].pid}\t${row[3].time.padEnd(
-            8,
-            ' '
-          )}\t${row[4].user.padEnd(8, ' ')}\t${row[5].process}`
-        )
+      sortProcess === 'mem' ? dbObject.unshift(headers) : cpuObject.unshift(headers)
+      dbObject.forEach((row, i) => {
+        const logFormat = `${row.cpu}\t${row.mem}\t${row.pid}\t${row.time.padEnd(
+          8,
+          ' '
+        )}\t${row.user.padEnd(8, ' ')}\t${row.process}`
+
+        if (i == 0) {
+          log(chalk.greenBright.underline(logFormat))
+        } else log(logFormat)
       })
     }
-    sortProcess === 'mem' ? dbObject.shift() : cpuObject.shift()
+    // sortProcess === 'mem' ? dbObject.shift() : cpuObject.shift()
     // log(cpuObject)
   })
   // sortProcess === 'cpu' ? log('cpu: \n', cpuObject) : log('mem: \n', dbObject)
