@@ -9,12 +9,12 @@ const app = express();
 const PORT = process.env.PORT || 3002
 
 
-await pingMongo()
-
+// await pingMongo()
+if (process.env.HEADLESS) {
 app.listen(PORT, () => {
     console.log(chalk.yellowBright.bgBlack(`NSSM listening on port ${PORT}`))
   })
-
+// getAvgMem(22)
+}
 
 getTelemetry(process.env.HEADLESS)
-// getAvgMem(22)
