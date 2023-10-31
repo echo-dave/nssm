@@ -10,6 +10,7 @@ const procs = async (data) => {
 
   const logProcs = (dataSet) => {
     log(`Sorting by ${dataSet} useage`)
+    try {
     data.processes[dataSet].forEach((row, i) => {
       if (i == 0) {
         log(
@@ -28,6 +29,8 @@ const procs = async (data) => {
         )}\t${row.user.padEnd(8, ' ')}\t${row.process}`
       )
     })
+  } catch(e) {console.warn(e)}
+  
   }
 
   if (data.processes.mem) logProcs('mem')
