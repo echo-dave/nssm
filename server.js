@@ -16,5 +16,5 @@ app.listen(PORT, () => {
   })
 
 
-getTelemetry('headless')
+getTelemetry(process.env.HEADLESS)
 // getAvgMem(22)
