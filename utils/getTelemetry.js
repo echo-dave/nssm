@@ -100,7 +100,7 @@ Time:\t\t ${chalk.magenta(time)}
       }
     } else {
       report.processes = {}
-      if (cpu < 0.5) {
+      if (cpu > 0.5) {
         const tmp = await processList('cpu', type(), isHeadless)
         cpuProcs.push(tmp)
         // log("tmp: ",cpuProcs)
