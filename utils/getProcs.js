@@ -44,7 +44,7 @@ async function processList(sortProcess, osType, isHeadless) {
             pid: Number(data[i][2]),
             time: data[i][3],
             user: data[i][4],
-            process: data[i][5],
+            process: data[i][5].trim(),
          }
         
       
