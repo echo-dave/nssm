@@ -14,7 +14,6 @@ const {time,meta,usedMem,freeMem,cpu,processes} = data
 console.log('meta', meta)
 console.clear()
 log(`Hostname:\t ${chalk.greenBright(meta.hostname)}
-OS:\t\t ${type()} \n\t\t ${version()}
 Total Mem: \t ${(totalmem / 1_000_000).toFixed(2)}M
 Used Mem:\t ${(usedMem * 100).toFixed(2)}%
 Free Mem:\t ${freeMem}M
