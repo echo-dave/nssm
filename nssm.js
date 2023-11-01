@@ -1,4 +1,4 @@
-#!node
+#!/usr/bin/env node
 import { argv } from 'node:process'
 import getTelemetry from './utils/getTelemetry.js'
 import client from './client.js'
