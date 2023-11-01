@@ -33,8 +33,8 @@ const procs = async (data) => {
   
   }
 
-  if (data.processes.mem) logProcs('mem')
-  if (data.processes.cpu) logProcs('cpu')
+  if (data.processes?.mem) logProcs('mem')
+  if (data.processes?.cpu) logProcs('cpu')
 
   //   return (await sortProcess) === 'mem' ? dbObject : cpuObject
 }

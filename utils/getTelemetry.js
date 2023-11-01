@@ -43,11 +43,10 @@ const systemUsage = async () => {
 
 let cpuProcs = []
 let memProcs = []
-export default async (isHeadless) => {
+export default async (thresholds, isHeadless) => {
   setInterval(async () => {
     const report = await systemUsage()
     report.meta = { hostname: hostname() }
-
     const { usedMem, freeMem, cpu, time, meta } = report
 
     // report.hostname = hostname()
@@ -63,7 +62,7 @@ CPU Usage:\t ${cpu * 100}%
 Time:\t\t ${chalk.magenta(time)}
 -------------------------------------------------
 -------------------------------------------------`)
-      if (usedMem > 0.5 || process.argv.indexOf('-p') > 1) {
+      if (usedMem > thresholds.memThreshold || process.argv.indexOf('-p') > 2) {
         processList('mem', type(), isHeadless)
       }
       switch (true) {
@@ -79,8 +78,7 @@ Time:\t\t ${chalk.magenta(time)}
         default:
           break
       }
-
-      if (cpu > 0.5 || process.argv.indexOf('-p') > 1) {
+      if (cpu > thresholds.cpuThreshold || process.argv.indexOf('-p') > 2) {
         processList('cpu', type(), isHeadless)
       }
       switch (true) {
@@ -98,7 +96,7 @@ Time:\t\t ${chalk.magenta(time)}
       }
     } else {
       report.processes = {}
-      if (cpu > 0.5) {
+      if (cpu > thresholds.cpuThreshold) {
         const tmp = await processList('cpu', type(), isHeadless)
         cpuProcs.push(tmp)
         // log("tmp: ",cpuProcs)
@@ -107,7 +105,7 @@ Time:\t\t ${chalk.magenta(time)}
           report.processes.cpu = cpuProcs.shift()
         }
       }
-      if (usedMem > 0.5) {
+      if (usedMem > thresholds.memThreshold) {
         const tmp2 = await processList('mem', type(), isHeadless)
         memProcs.push(tmp2)
         // log(chalk.red("tmp: "),memProcs)
