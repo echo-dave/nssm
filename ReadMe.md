@@ -21,6 +21,7 @@ Unfortunately I haven't been able to get a ps view to differentiate between all 
 * Chalk for coloring headers, hostname, alerts
 * Mongodb for database
 * dotenv for mongo uri as MONGO_URI
+* inquirer for cli prompts for picking which host to monitor
 
 I may remove the os version from the to of the monitoring (it isn't logged, but was informative when looking at scripting issues).
 
@@ -36,8 +37,9 @@ Who knows, data visualization isn't something I've previously dug into and my iO
 Clone the repo and pick a mode: local, client, or server
 ```
 npm -i
-npm run local
+./nssm.js
 ```
+nssm.js is now an executable node script
 you may need to adjust terminal window for optimal use
 
 #### How does it work?

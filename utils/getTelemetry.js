@@ -6,7 +6,6 @@ import sendData from '../api/tsData.js'
 const alert2 = chalk.bgRedBright.whiteBright.bold
 const alert = chalk.bgYellow.bold
 const warn = chalk.yellow.bgBlack
-const info = chalk.black.bgWhiteBright
 
 const getCpuUsage = async () => {
   const cpuData = cpus()
@@ -64,11 +63,10 @@ CPU Usage:\t ${cpu * 100}%
 Time:\t\t ${chalk.magenta(time)}
 -------------------------------------------------
 -------------------------------------------------`)
-
+      if (usedMem > 0.5 || process.argv.indexOf('-p') > 1) {
+        processList('mem', type(), isHeadless)
+      }
       switch (true) {
-        case usedMem > 0.5:
-          !isHeadless ? log(info(' Process logging for mem ')) : null
-          processList('mem', type(), isHeadless)
         case usedMem > 0.85:
           log(alert2(`Mem use getting critical ${usedMem}`))
           break
@@ -82,10 +80,10 @@ Time:\t\t ${chalk.magenta(time)}
           break
       }
 
+      if (cpu > 0.5 || process.argv.indexOf('-p') > 1) {
+        processList('cpu', type(), isHeadless)
+      }
       switch (true) {
-        case cpu > 0.5:
-          log(info(' Process logging for cpu '))
-          processList('cpu', type(), isHeadless)
         case cpu > 0.85:
           log(alert2(`CPU use getting critical ${cpu}`))
           break
@@ -123,8 +121,6 @@ Time:\t\t ${chalk.magenta(time)}
         delete report.processes
       // console.dir(report, { depth: null, colors: true })
       sendData(report)
-
-
     }
   }, 2000)
 }

@@ -21,11 +21,10 @@ CPU Usage:\t ${cpu * 100}%
 Time:\t\t ${chalk.magenta(time)}
 -------------------------------------------------
 -------------------------------------------------`)
-
+if (usedMem > 0.5 || cpu > 0.5) {
+  processList(data)
+}
 switch (true) {
-  case usedMem > 0.5:
-    // !isHeadless ? log(info(' Process logging for mem ')) : null
-    processList(data)
   case usedMem > 0.85:
     log(alert2(`Mem use getting critical ${usedMem}`))
     break
@@ -40,9 +39,6 @@ switch (true) {
 }
 
 switch (true) {
-  case cpu > 0.5:
-    // log(info(' Process logging for cpu '))
-    processList(data)
   case cpu > 0.85:
     log(alert2(`CPU use getting critical ${cpu}`))
     break
