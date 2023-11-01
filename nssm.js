@@ -24,8 +24,8 @@ switch (true) {
   default:
     console.log(`${chalk.yellowBright.bgBlack('nssm accepts one of 3 options:')}
     ${green('-s')} server mode for database logging
-    ${green('-c')} client mode for readding and monitoring remotely
-    ${green('-l')} local mode for monoitoring locally without logging`)
+    ${green('-c')} client mode for reading and monitoring remotely
+    ${green('-l')} local mode for monitoring locally without logging`)
     process.exit(0)
     break
 }
