@@ -8,7 +8,7 @@ import chalk from 'chalk'
 
 async function processList(sortProcess, osType, isHeadless) {
   let dbObject = []
-  let cpuObject = []
+  // let cpuObject = []
 
   let processSort
   if (osType === 'Linux') {
@@ -48,15 +48,16 @@ async function processList(sortProcess, osType, isHeadless) {
          }
         
       
-
-      sortProcess === 'mem'
-        ? dbObject.push(buildObject)
-        : cpuObject.push(buildObject)
+         dbObject.push(buildObject)
+      // sortProcess === 'mem'
+      //   ? dbObject.push(buildObject)
+      //   : cpuObject.push(buildObject)
     }
 
     //format terminal output
     if (!isHeadless) {
-      sortProcess === 'mem' ? dbObject.unshift(headers) : cpuObject.unshift(headers)
+      // sortProcess === 'mem' ? dbObject.unshift(headers) : cpuObject.unshift(headers)
+      dbObject.unshift(headers)
       dbObject.forEach((row, i) => {
         const logFormat = `${row.cpu}\t${row.mem}\t${row.pid}\t${row.time.padEnd(
           8,
@@ -71,8 +72,9 @@ async function processList(sortProcess, osType, isHeadless) {
     // sortProcess === 'mem' ? dbObject.shift() : cpuObject.shift()
     // log(cpuObject)
   })
-  // sortProcess === 'cpu' ? log('cpu: \n', cpuObject) : log('mem: \n', dbObject)
-  return (await sortProcess) === 'mem' ? dbObject : cpuObject
+  // sortProcess === 'cpu' ? log('cpu: \n', cpuObject) : log('mem: \n', dbObject) 
+  // return (await sortProcess === 'mem' ? dbObject : cpuObject)
+  return (await dbObject)
 
   processSort.stderr.on('data', (data) => console.error(data.toString()))
 }
