@@ -2,30 +2,23 @@ import 'dotenv/config'
 import { MongoClient, ServerApiVersion } from 'mongodb'
 import chalk from 'chalk'
 const info = (string) => console.log(chalk.yellowBright.bgBlack(string))
-const tsCollection = 'ban8'
+const {nssmCollection, MONGO_DB, MONGO_URI} = process.env
 const log = (toLog) => console.dir(toLog, { depth: null, colors: true })
-const uri = process.env.MONGO_URI
+const uri = MONGO_URI
 const client = new MongoClient(uri)
-//     {
-//   serverApi: {
-//     version: ServerApiVersion.v1,
-//     strict: true,
-//     deprecationErrors: true,
-//   },
-// })
 
 const findCollection = async (collections) => {
   info('\nMongo collection found and continuing startup \n')
   collections.map((el) => {
-    el.name === tsCollection ? log(el) : null
+    el.name === nssmCollection ? log(el) : null
   })
   return 'done'
 }
 
-const initializeDB = async (newCollection) => {
+const initializeDBTimeseries = async (newCollection) => {
   try {
     info("\nMongo collection not found, we'll make one now! \n")
-    await client.db(process.env.MONGO_DB).createCollection(newCollection, {
+    await client.db(MONGO_DB).createCollection(newCollection, {
       timeseries: {
         timeField: 'time',
         metaField: 'meta',
@@ -41,25 +34,36 @@ const initializeDB = async (newCollection) => {
   }
 }
 
-const ping = async () => {
+const initializeDB = async (newCollection) => {
   try {
-    const collections = await client
-      .db(process.env.MONGO_DB)
-      .listCollections()
-      .toArray()
-
-    const exists = collections.some((el) => el.name === tsCollection)
-    exists === true ? findCollection(collections) : initializeDB(tsCollection)
-    // log(collections)
-    // await client.db(process.env.MONGO_DB).command({ ping: 1 });
-    // console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    await client.db(MONGO_DB).createCollection(newCollection)
+    await client
+      .db(MONGO_DB)
+      .collection(newCollection).createIndex(
+        { time: 1 },
+        { name: 'timeIndex', expireAfterSeconds: 60*60*72 }
+      )
   } catch (e) {
     console.error(e)
   }
 }
-// collections = await client.db(process.env.MONGO_DB).listCollections().toArray();
+
+const ping = async () => {
+  try {
+    const collections = await client
+      .db(MONGO_DB)
+      .listCollections()
+      .toArray()
+      
+    const exists = collections.some((el) => el.name === nssmCollection)
+    exists === true ? findCollection(collections) : initializeDB(nssmCollection)
+
+  } catch (e) {
+    console.error(e)
+  }
+}
 
 const db = (dbCollection) =>
-  client.db(process.env.MONGO_DB).collection(dbCollection)
-const telemetry = db('telemetry')
+  client.db(MONGO_DB).collection(dbCollection)
+const telemetry = db(nssmCollection)
 export { telemetry, db, client, ping }
