@@ -1,9 +1,6 @@
 import 'dotenv/config'
-import { MongoClient, ServerApiVersion } from 'mongodb'
-import chalk from 'chalk'
-const info = (string) => console.log(chalk.yellowBright.bgBlack(string))
+import { MongoClient } from 'mongodb'
 const {nssmCollection, MONGO_DB, MONGO_URI} = process.env
-const log = (toLog) => console.dir(toLog, { depth: null, colors: true })
 const uri = MONGO_URI
 const client = new MongoClient(uri)
 
@@ -17,6 +14,9 @@ const findCollection = async (collections) => {
 
 const initializeDBTimeseries = async (newCollection) => {
   try {
+    const {default: chalk} = await import('chalk')
+    const info = (string) => console.log(chalk.yellowBright.bgBlack(string))
+
     info("\nMongo collection not found, we'll make one now! \n")
     await client.db(MONGO_DB).createCollection(newCollection, {
       timeseries: {
