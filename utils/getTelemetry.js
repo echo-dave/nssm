@@ -24,7 +24,7 @@ const getMemUsage = async () => {
   const freeMemory = freemem()
   const totalMem = totalmem()
   const usedMemory = (totalMem - freeMemory) / totalMem
-  return { usedMem: usedMemory.toFixed(4), freeMem: freeMemory }
+  return { usedMem: usedMemory.toFixed(4), freeMem: freeMemory,totalMem: totalMem }
 }
 
 const systemUsage = async () => {
@@ -35,8 +35,9 @@ const systemUsage = async () => {
   return {
     time: timeStamp,
     meta: {},
-    usedMem: Number(mem.usedMem),
-    freeMem: Number(mem.freeMem),
+    usedMem: Number(mem.usedMem), //decimal percent ie .34
+    freeMem: Number(mem.freeMem), //in MBs
+    totalMem: (mem.totalMem / 1_000_000).toFixed(2), //converting to MB
     cpu: Number(cpu.cpu),
   }
 }
@@ -47,7 +48,7 @@ export default async (thresholds, isHeadless) => {
   setInterval(async () => {
     const report = await systemUsage()
     report.meta = { hostname: hostname() }
-    const { usedMem, freeMem, cpu, time, meta } = report
+    const { usedMem, freeMem, cpu, time, meta, totalMem } = report
 
     // report.hostname = hostname()
     //   log(report)
@@ -55,7 +56,7 @@ export default async (thresholds, isHeadless) => {
       console.clear()
       log(`Hostname:\t ${chalk.greenBright(meta.hostname)}
 OS:\t\t ${type()} \n\t\t ${version()}
-Total Mem: \t ${(totalmem / 1_000_000).toFixed(2)}M
+Total Mem: \t ${(totalMem / 1_000_000).toFixed(2)}M
 Used Mem:\t ${(usedMem * 100).toFixed(2)}%
 Free Mem:\t ${freeMem}M
 CPU Usage:\t ${cpu * 100}%

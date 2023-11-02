@@ -1,4 +1,3 @@
-import{totalmem} from 'node:os'
 import chalk from 'chalk'
 import {log} from 'console'
 import processList from './dispProcs.js'
@@ -10,10 +9,10 @@ const info = chalk.black.bgWhiteBright
 
 const dispTelemetry = (data) => {
     console.log('data: ', data);
-const {time,meta,usedMem,freeMem,cpu,processes} = data
+const {time,meta,usedMem,freeMem,cpu,processes,totalMem} = data
 console.clear()
 log(`Hostname:\t ${chalk.greenBright(meta.hostname)}
-Total Mem: \t ${(totalmem / 1_000_000).toFixed(2)}M
+Total Mem: \t ${(totalMem / 1_000_000).toFixed(2)}M
 Used Mem:\t ${(usedMem * 100).toFixed(2)}%
 Free Mem:\t ${freeMem}M
 CPU Usage:\t ${(cpu * 100).toFixed(2)}%
