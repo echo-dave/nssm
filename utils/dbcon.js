@@ -10,7 +10,7 @@ const findCollection = async (collections) => {
 
   info('\nMongo collection found and continuing startup \n')
   collections.map((el) => {
-    el.name === nssmCollection ? log(el) : null
+    el.name === nssmCollection ? console.dir(el,{depth:null}) : null
   })
   return 'done'
 }
