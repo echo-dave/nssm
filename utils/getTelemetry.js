@@ -32,13 +32,14 @@ const systemUsage = async () => {
   const cpu = await getCpuUsage()
   const mem = await getMemUsage()
   mem.freeMem = (mem.freeMem / 1_000_000).toFixed(2) //convert to megabytes from bytes
+  mem.totalMem = (mem.totalMem / 1_000_000).toFixed(2)  //converting to MB
   return {
     time: timeStamp,
     meta: {},
-    usedMem: Number(mem.usedMem), //decimal percent ie .34
-    freeMem: Number(mem.freeMem), //in MBs
-    totalMem: (Number(mem.totalMem) / 1_000_000).toFixed(2), //converting to MB
-    cpu: Number(cpu.cpu),
+    usedMem: parseFloat(mem.usedMem), //decimal percent ie .34
+    freeMem: parseFloat(mem.freeMem), //in MBs
+    totalMem: parseFloat(mem.totalMem),
+    cpu: parseFloat(cpu.cpu),
   }
 }
 
@@ -49,7 +50,6 @@ export default async (thresholds, isHeadless) => {
     const report = await systemUsage()
     report.meta = { hostname: hostname() }
     const { usedMem, freeMem, cpu, time, meta, totalMem } = report
-
     // report.hostname = hostname()
     //   log(report)
     if (!isHeadless) {
