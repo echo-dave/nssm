@@ -12,8 +12,8 @@ const dispTelemetry = (data) => {
 const {time,meta,usedMem,freeMem,cpu,processes,totalMem} = data
 console.clear()
 log(`Hostname:\t ${chalk.greenBright(meta.hostname)}
-Total Mem:\t ${totalMem}M
 Used Mem:\t ${(usedMem * 100).toFixed(2)}%
+Total Mem:\t ${totalMem}M
 Free Mem:\t ${freeMem}M
 CPU Usage:\t ${(cpu * 100).toFixed(2)}%
 Time:\t\t ${chalk.magenta(time)}
