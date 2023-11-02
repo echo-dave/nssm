@@ -37,7 +37,7 @@ const systemUsage = async () => {
     meta: {},
     usedMem: Number(mem.usedMem), //decimal percent ie .34
     freeMem: Number(mem.freeMem), //in MBs
-    totalMem: (mem.totalMem / 1_000_000).toFixed(2), //converting to MB
+    totalMem: (Number(mem.totalMem) / 1_000_000).toFixed(2), //converting to MB
     cpu: Number(cpu.cpu),
   }
 }
