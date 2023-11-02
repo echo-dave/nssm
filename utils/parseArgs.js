@@ -20,7 +20,12 @@ try{
     } else cpuThreshold = Number(inputArgsOption2[2])
     argvLength -= 1
   }
-} catch(e){ help()}
+} catch(e){ 
+  (async () => {
+  const {default: help} = await import('./argHelpInfo.js')
+  help()
+  })()
+}
   return {
     memThreshold: memThreshold || 0.5,
     cpuThreshold: cpuThreshold || 0.5,

@@ -2,14 +2,12 @@
 import { argv } from 'node:process'
 // import getTelemetry from './utils/getTelemetry.js'
 // import client from './client.js'
-import chalk from 'chalk'
 // import { ping } from './utils/dbcon.js'
 import parseArgs from './utils/parseArgs.js'
-const green = chalk.green
 const argvLength = argv.length
 const thresholds =
   argvLength > 3 && argv[2] === '-s'
-    ? parseArgs(argvLength, help)
+    ? parseArgs(argvLength)
     : { memThreshold: 0.5, cpuThreshold: 0.5, argvLength: argvLength }
 
 switch (true) {
@@ -30,7 +28,7 @@ switch (true) {
     })()
     break
   //local only
-  case argv.indexOf('-l') === 2:
+  case argv.slice(3).join(' ').match(/^(-l$|-l -p)$/) !== null:
     ;(async () => {
       const { default: getTelemetry } = await import('./utils/getTelemetry.js')
       getTelemetry(thresholds)
@@ -38,23 +36,11 @@ switch (true) {
     break
 
   default:
+    (async() =>{
+    const {default: help} = await import('./utils/argHelpInfo.js')
     help()
+    })()
     break
 }
 
-function help() {
-  console.log(`${chalk.yellowBright.bgBlack('nssm accepts one of 3 options:')}
-    
-    ${green('-s')} server mode for database logging
-    
-    ${green('-c')} client mode for reading and monitoring remotely
-    
-    ${green('-l')} local mode for monitoring locally without logging
-      
-      ${green('-p')} optional with local ${green(
-    '-l'
-  )} to force process monitoring
-      
-    ie: ./nssm -l -p `)
-  process.exit(0)
-}
+
