@@ -5,6 +5,9 @@ const uri = MONGO_URI
 const client = new MongoClient(uri)
 
 const findCollection = async (collections) => {
+  const {default: chalk} = await import('chalk')
+  const info = (string) => console.log(chalk.yellowBright.bgBlack(string))
+
   info('\nMongo collection found and continuing startup \n')
   collections.map((el) => {
     el.name === nssmCollection ? log(el) : null
