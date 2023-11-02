@@ -1,4 +1,4 @@
-# Welcome to the Node Simple System Monitor wiki!
+# Node Simple System Monitor
 ![nssm promp](readme/nssmScript.jpg)
 ![nssm screen](readme/nssm.jpg)
 ## What is this?
