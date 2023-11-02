@@ -11,7 +11,6 @@ const info = chalk.black.bgWhiteBright
 const dispTelemetry = (data) => {
     console.log('data: ', data);
 const {time,meta,usedMem,freeMem,cpu,processes} = data
-console.log('meta', meta)
 console.clear()
 log(`Hostname:\t ${chalk.greenBright(meta.hostname)}
 Total Mem: \t ${(totalmem / 1_000_000).toFixed(2)}M
@@ -21,7 +20,7 @@ CPU Usage:\t ${cpu * 100}%
 Time:\t\t ${chalk.magenta(time)}
 -------------------------------------------------
 -------------------------------------------------`)
-if (usedMem > 0.5 || cpu > 0.5) {
+if (processes) {
   processList(data)
 }
 switch (true) {
