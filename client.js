@@ -1,6 +1,5 @@
 import getHostnames from './api/getHostnames.js'
 import getClientData from './api/clientTsData.js'
-import chalk from 'chalk'
 import inquirer from 'inquirer'
 
 export default async () => {
