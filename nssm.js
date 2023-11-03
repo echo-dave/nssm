@@ -28,7 +28,7 @@ switch (true) {
     })()
     break
   //local only
-  case argv.slice(3).join(' ').match(/^(-l$|-l -p)$/) !== null:
+  case argv.slice(2).join(' ').match(/^(-l$|-l -p)$/) !== null:
     ;(async () => {
       const { default: getTelemetry } = await import('./utils/getTelemetry.js')
       getTelemetry(thresholds)
