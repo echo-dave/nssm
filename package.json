@@ -1,6 +1,6 @@
 {
   "name": "nodesysmon",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Node simple system monitoring",
   "main": "index.js",
   "engines": {
@@ -8,8 +8,8 @@
   },
   "type": "module",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/echo-dave/nssm.git"
+    "type": "git",
+    "url": "https://github.com/echo-dave/nssm.git"
   },
   "bin": {
     "nssm": "./nssm.js"

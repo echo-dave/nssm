@@ -11,6 +11,7 @@ There are 3 working modes
 * local - just runs locally with no databasing
 * client - for monitoring a remote server via Mongo database
 * server - for gathering data and sending to Mongo (it will need to have a deamon setup)
+It's now possible to use ctrl-N to change to another server to monitor without have to exit.
 
 ## What does it actually monitor?
 * Currently it's basically monitoring cpu and ram

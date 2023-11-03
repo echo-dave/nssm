@@ -1,8 +1,5 @@
 #!/usr/bin/env node
 import { argv } from 'node:process'
-// import getTelemetry from './utils/getTelemetry.js'
-// import client from './client.js'
-// import { ping } from './utils/dbcon.js'
 import parseArgs from './utils/parseArgs.js'
 const argvLength = argv.length
 const thresholds =
