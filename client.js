@@ -4,7 +4,6 @@ import inquirer from 'inquirer'
 
 export default async () => {
   const hostnames = await getHostnames()
-  // const hostnames = ['creativepint']
 
   const inquirerPrompt = async () => {
     return await inquirer.prompt([
