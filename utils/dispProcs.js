@@ -9,7 +9,7 @@ const procs = async (data) => {
   //   sortProcess === 'mem' ? dbObject.unshift(headers) : cpuObject.unshift(headers)
 
   const logProcs = (dataSet) => {
-    log(`Sorting by ${dataSet} useage`)
+    log(`\xa0\xa0Sorting by ${dataSet} useage`)
     try {
     data.processes[dataSet].forEach((row, i) => {
       if (i == 0) {
@@ -33,8 +33,8 @@ const procs = async (data) => {
   
   }
 
-  if (data.processes.mem) logProcs('mem')
-  if (data.processes.cpu) logProcs('cpu')
+  if (data.processes?.mem) logProcs('mem')
+  if (data.processes?.cpu) logProcs('cpu')
 
   //   return (await sortProcess) === 'mem' ? dbObject : cpuObject
 }

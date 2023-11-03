@@ -2,7 +2,7 @@ import { cpus, freemem, totalmem, hostname, type, version } from 'node:os'
 import chalk from 'chalk'
 import { processList } from './getProcs.js'
 import { log } from 'node:console'
-import sendData from '../api/tsData.js'
+import sendData from '../api/insertTsData.js'
 const alert2 = chalk.bgRedBright.whiteBright.bold
 const alert = chalk.bgYellow.bold
 const warn = chalk.yellow.bgBlack
@@ -24,7 +24,7 @@ const getMemUsage = async () => {
   const freeMemory = freemem()
   const totalMem = totalmem()
   const usedMemory = (totalMem - freeMemory) / totalMem
-  return { usedMem: usedMemory.toFixed(4), freeMem: freeMemory }
+  return { usedMem: usedMemory.toFixed(4), freeMem: freeMemory,totalMem: totalMem }
 }
 
 const systemUsage = async () => {
@@ -32,38 +32,38 @@ const systemUsage = async () => {
   const cpu = await getCpuUsage()
   const mem = await getMemUsage()
   mem.freeMem = (mem.freeMem / 1_000_000).toFixed(2) //convert to megabytes from bytes
+  mem.totalMem = (mem.totalMem / 1_000_000).toFixed(2)  //converting to MB
   return {
     time: timeStamp,
     meta: {},
-    usedMem: Number(mem.usedMem),
-    freeMem: Number(mem.freeMem),
-    cpu: Number(cpu.cpu),
+    usedMem: parseFloat(mem.usedMem), //decimal percent ie .34
+    freeMem: parseFloat(mem.freeMem), //in MBs
+    totalMem: parseFloat(mem.totalMem),
+    cpu: parseFloat(cpu.cpu),
   }
 }
 
 let cpuProcs = []
 let memProcs = []
-export default async (isHeadless) => {
+export default async (thresholds, isHeadless) => {
   setInterval(async () => {
     const report = await systemUsage()
     report.meta = { hostname: hostname() }
-
-    const { usedMem, freeMem, cpu, time, meta } = report
-
+    const { usedMem, freeMem, cpu, time, meta, totalMem } = report
     // report.hostname = hostname()
     //   log(report)
     if (!isHeadless) {
       console.clear()
       log(`Hostname:\t ${chalk.greenBright(meta.hostname)}
 OS:\t\t ${type()} \n\t\t ${version()}
-Total Mem: \t ${(totalmem / 1_000_000).toFixed(2)}M
+Total Mem: \t ${(totalMem / 1_000_000).toFixed(2)}M
 Used Mem:\t ${(usedMem * 100).toFixed(2)}%
 Free Mem:\t ${freeMem}M
 CPU Usage:\t ${cpu * 100}%
 Time:\t\t ${chalk.magenta(time)}
 -------------------------------------------------
 -------------------------------------------------`)
-      if (usedMem > 0.5 || process.argv.indexOf('-p') > 1) {
+      if (usedMem > thresholds.memThreshold || process.argv.indexOf('-p') > 2) {
         processList('mem', type(), isHeadless)
       }
       switch (true) {
@@ -79,8 +79,7 @@ Time:\t\t ${chalk.magenta(time)}
         default:
           break
       }
-
-      if (cpu > 0.5 || process.argv.indexOf('-p') > 1) {
+      if (cpu > thresholds.cpuThreshold || process.argv.indexOf('-p') > 2) {
         processList('cpu', type(), isHeadless)
       }
       switch (true) {
@@ -98,7 +97,7 @@ Time:\t\t ${chalk.magenta(time)}
       }
     } else {
       report.processes = {}
-      if (cpu > 0.5) {
+      if (cpu > thresholds.cpuThreshold) {
         const tmp = await processList('cpu', type(), isHeadless)
         cpuProcs.push(tmp)
         // log("tmp: ",cpuProcs)
@@ -107,7 +106,7 @@ Time:\t\t ${chalk.magenta(time)}
           report.processes.cpu = cpuProcs.shift()
         }
       }
-      if (usedMem > 0.5) {
+      if (usedMem > thresholds.memThreshold) {
         const tmp2 = await processList('mem', type(), isHeadless)
         memProcs.push(tmp2)
         // log(chalk.red("tmp: "),memProcs)

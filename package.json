@@ -1,12 +1,19 @@
 {
   "name": "nodesysmon",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Node simple system monitoring",
   "main": "index.js",
   "engines": {
     "node": "^20.9.0"
   },
   "type": "module",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/echo-dave/nssm.git"
+  },
+  "bin": {
+    "nssm": "./nssm.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "local": "node server.js",
