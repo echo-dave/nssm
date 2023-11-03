@@ -2,7 +2,7 @@ import chalk from 'chalk'
 const green = chalk.green
 
 export default () => {
-    console.log(`${chalk.yellowBright.bgBlack('nssm accepts one of 3 options:')}
+  console.log(`${chalk.yellowBright.bgBlack('nssm accepts one of 3 options:')}
       Usage: ./nssm.js [-s mem= cpu=]] | -c | -l [-p]
 
       ${green('-s')} server mode for database logging
@@ -13,10 +13,13 @@ export default () => {
       
       ${green('-l')} local mode for monitoring locally without logging
          ${green('-p')} optional with local ${green(
-      '-l'
-    )} to force process monitoring
+    '-l'
+  )} to force process monitoring
+
+      ${green('ctrl-N')} to swap servers monitored if you have more than one 
+      already logged in the database.
         
       ie: ./nssm.js -l -p 
           ./nssm.js -s mem=.6 cpu=.35`)
-    process.exit(0)
-  }
+  process.exit(0)
+}
