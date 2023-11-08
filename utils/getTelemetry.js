@@ -24,7 +24,11 @@ const getMemUsage = async () => {
   const freeMemory = freemem()
   const totalMem = totalmem()
   const usedMemory = (totalMem - freeMemory) / totalMem
-  return { usedMem: usedMemory.toFixed(4), freeMem: freeMemory,totalMem: totalMem }
+  return {
+    usedMem: usedMemory.toFixed(4),
+    freeMem: freeMemory,
+    totalMem: totalMem,
+  }
 }
 
 const systemUsage = async () => {
@@ -32,7 +36,7 @@ const systemUsage = async () => {
   const cpu = await getCpuUsage()
   const mem = await getMemUsage()
   mem.freeMem = (mem.freeMem / 1_000_000).toFixed(2) //convert to megabytes from bytes
-  mem.totalMem = (mem.totalMem / 1_000_000).toFixed(2)  //converting to MB
+  mem.totalMem = (mem.totalMem / 1_000_000).toFixed(2) //converting to MB
   return {
     time: timeStamp,
     meta: {},
@@ -45,7 +49,7 @@ const systemUsage = async () => {
 
 let cpuProcs = []
 let memProcs = []
-export default async (thresholds, isHeadless) => {
+export default async (thresholds, isHeadless, io) => {
   setInterval(async () => {
     const report = await systemUsage()
     report.meta = { hostname: hostname() }
@@ -120,6 +124,7 @@ Time:\t\t ${chalk.magenta(time)}
         delete report.processes
       // console.dir(report, { depth: null, colors: true })
       sendData(report)
+      io.emit('new data', report)
     }
   }, 2000)
 }
