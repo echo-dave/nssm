@@ -1,6 +1,6 @@
 <script>
   import { Line } from 'svelte-chartjs'
-  import options from './options.js'
+  import options from './dataOptions.js'
   import {
     Chart as ChartJS,
     Title,
@@ -25,9 +25,9 @@
   )
   export let metrics
   // console.log(metrics)
-  let data
-  function updateDate(metrics) {
-    data = {
+  let chartData
+  function updateData(metrics) {
+    chartData = {
       title: 'System metrics',
       labels: metrics?.map((x) => {
         let time = new Date(x.time)
@@ -46,7 +46,7 @@
       ]
     }
   }
-  $: updateDate(metrics)
+  $: updateData(metrics)
   ChartJS.defaults.color = 'white'
   // $: data = data
   // chartRef.update()
@@ -59,11 +59,12 @@
   //   }
 </script>
 
-<div class="chart-container" style="position: relative; height:8000x;">
-  {#if JSON.stringify(metrics) !== ''}
-    <Line {data} height="800" width="2000" {options} />
-  {/if}
-</div>
+<!-- <div class="inner-chart-container" style="position: relative;"> -->
+{#if JSON.stringify(metrics) !== ''}
+  <Line class="inner-chart-container" data={chartData} height="800" width="2000" {options} />
+{/if}
+
+<!-- </div> -->
 
 <style>
 </style>

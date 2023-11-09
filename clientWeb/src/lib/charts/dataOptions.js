@@ -22,7 +22,8 @@ const options = {
           return index % 5 === 0 ? this.getLabelForValue(val) : ''
         },
         color: 'white',
-        grid: { display: false }
+        grid: { display: false },
+        display: false
       }
     },
     y: {

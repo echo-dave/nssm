@@ -23,6 +23,7 @@
     flex-direction: row-reverse;
     justify-content: flex-end;
     gap: 2em;
+    margin-bottom: 0.5em;
   }
   .hostname {
     font-size: 1.25em;
