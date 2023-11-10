@@ -59,7 +59,7 @@
 
 <!-- <div class="inner-chart-container" style="position: relative;"> -->
 {#if JSON.stringify(metrics) !== ''}
-  <Line class="inner-chart-container" data={chartData} height="800" width="2000" {options} />
+  <Line class="inner-chart-container" data={chartData} {options} />
 {/if}
 
 <!-- </div> -->

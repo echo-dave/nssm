@@ -3,16 +3,18 @@
   import Header from './Header.svelte'
   import { onMount } from 'svelte'
   import { io } from 'socket.io-client'
-  import CpuData from '../lib/charts/CpuData.svelte'
-  import MemData from '../lib/charts/MemData.svelte'
-  import Processes from '../lib/charts/Processes.Svelte'
-  //   import Test from '../lib/charts/Test.svelte'
+  import CpuData from '$lib/charts/CpuData.svelte'
+  import MemData from '$lib/charts/MemData.svelte'
+  import Processes from '$lib/charts/Processes.Svelte'
+  import TimeScaleButton from './TimeScaleButton.svelte'
 
   const socket = io()
   // import { background } from '../store'
 
   let metrics = []
   let minutes = 10
+  let time = [0.5, 15, 60]
+
   export let data
   onMount(async () => {
     metrics = data.data
@@ -21,11 +23,13 @@
       newData.time = new Date(newData.time)
       metrics = [...metrics, newData]
       if (metrics.length > minutes * 30) metrics.shift()
-      console.log('io length: ', metrics.length)
+      // console.log('io length: ', metrics.length)
     })
   })
 
   const changeDataLength = () => {
+    console.log('update length')
+    console.log('minutes: ', minutes)
     let dataPointsCount = minutes * 30
     if (metrics.length > dataPointsCount) {
       metrics = metrics.slice(-dataPointsCount)
@@ -36,6 +40,7 @@
     console.log(metrics.length, 'count', dataPointsCount)
   }
   const updateDataPoints = async (count) => {
+    console.log('update points')
     try {
       if (count > metrics.length + 1) {
         console.log('updating metrics')
@@ -48,71 +53,51 @@
   }
 
   // changeDataLength(minutes)
-
-  const setButtonActive = (el) => {
-    console.log(el)
-    let activeButton = document.querySelector('.timeSelection')
-    activeButton.classList.remove('timeSelection')
-    el.target.classList.add('timeSelection')
-  }
 </script>
 
 <head> <title>Simple System Monitor</title></head>
 
 <Header {metrics} />
-<button
-  on:click={(e) => {
-    minutes = 0.5
-    changeDataLength()
-    setButtonActive(e)
-  }}>30s</button
->
-<button
-  class="timeSelection"
-  on:click={(e) => {
-    minutes = 15
-    changeDataLength()
-    setButtonActive(e)
-  }}>15m</button
->
-<button
-  on:click={(e) => {
-    minutes = 60
-    changeDataLength()
-    setButtonActive(e)
-  }}>1h</button
->
 
-<div class="chart-container no-border">
-  <CpuData {metrics} />
-  <MemData {metrics} />
-  <!-- <Processes {metrics} /> -->
+<div id="chartTimeScaleButtons" class="no-border">
+  <div class="left no-border">
+    <div id="time-buttons" class="no-border">
+      {#each time as timeElement}
+        <TimeScaleButton bind:minutes time={timeElement} {changeDataLength} />
+      {/each}
+    </div>
+    <h2>History for the last {minutes} minutes</h2>
+  </div>
+  <div class="right no-border"></div>
 </div>
+<section id="main-charts">
+  <div class="chart-container no-border">
+    <CpuData {metrics} />
+    <MemData {metrics} />
+  </div>
+  <div class="chart-processes no-border">
+    <Processes {metrics} />
+  </div>
+</section>
 
 <style>
-  /* :global(.chart-container) {
+  #chartTimeScaleButtons {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 99vw;
-    height: 250px;
-    padding: 0 1.5em 0 0.5em;
-    box-sizing: border-box;
-    margin: 1em 0;
-  } */
-
-  button.timeSelection {
-    background-color: rgb(17, 217, 217);
+    flex-direction: row;
+    justify-content: space-around;
   }
-  .chart-container {
+  #chartTimeScaleButtons h2 {
+    /* text-align: center; */
+    margin-top: 0;
+    flex: 0 0;
+  }
+  div.left,
+  div.right {
     flex: 1 1;
+  }
+  div.left {
     display: flex;
-    /* align-items: center; */
-    /* justify-content: space-around; */
-    box-sizing: border-box;
-    width: 45vw;
-    height: 400px;
     flex-direction: column;
-    align-content: start;
+    align-items: center;
   }
 </style>

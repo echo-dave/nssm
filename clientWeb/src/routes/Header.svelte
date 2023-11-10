@@ -3,7 +3,7 @@
 </script>
 
 <flexbox>
-  <h2 style="">Node: Simple <br />System Monitor</h2>
+  <h2>Simple <br />System Monitor</h2>
   <div id="liveSysData">
     <ul id="topMetrics">
       <li><span class="hostname">{metrics.at(-1)?.meta.hostname}</span></li>
@@ -19,8 +19,8 @@
 </flexbox>
 
 <style>
-  liveSysyData {
-    height: 13em;
+  #liveSysData {
+    height: 12em;
   }
 
   flexbox {
@@ -36,15 +36,12 @@
     padding-right: 1em;
     width: 250px;
   }
-  /* div {
-    border-radius: 0.5em;
-    border: solid white 1.5px;
-  } */
+
   h2 {
     font-size: 1.5em;
     color: white;
     text-shadow: 1.5px 1.5px 1.5px black;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: var(--header-font-family);
     margin-top: 0;
   }
   ul {
@@ -52,5 +49,16 @@
   }
   li {
     margin-left: -1.5em;
+  }
+
+  @media screen and (max-width: 540px) {
+    flexbox {
+      flex-direction: column;
+      gap: 0.5em;
+      justify-content: flex-start;
+    }
+    flexbox h2 {
+      margin-bottom: 0.5em;
+    }
   }
 </style>
