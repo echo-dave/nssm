@@ -6,18 +6,23 @@
   <h2 style="">Node: Simple <br />System Monitor</h2>
   <div id="liveSysData">
     <ul id="topMetrics">
-      <li><span class="hostname">{metrics[0]?.meta.hostname}</span></li>
-      <li>Cpu:{(metrics[0]?.cpu * 100).toFixed(2)}%</li>
-      <li>Mem:{(metrics[0]?.usedMem * 100).toFixed(2)}%</li>
+      <li><span class="hostname">{metrics.at(-1)?.meta.hostname}</span></li>
+      <li>Cpu:{(metrics.at(-1)?.cpu * 100).toFixed(2)}%</li>
+      <li>Mem:{(metrics.at(-1)?.usedMem * 100).toFixed(2)}%</li>
       <li>
         Total Mem <br />
-        Reported:{metrics[0]?.totalMem}M
+        Reported:{metrics.at(-1)?.totalMem}M
       </li>
+      <li style="color: magenta;">{metrics.at(-1)?.time}</li>
     </ul>
   </div>
 </flexbox>
 
 <style>
+  liveSysyData {
+    height: 13em;
+  }
+
   flexbox {
     display: flex;
     flex-direction: row-reverse;
@@ -25,21 +30,16 @@
     gap: 2em;
     margin-bottom: 0.5em;
   }
-  .hostname {
-    font-size: 1.25em;
-    font-weight: 800;
-    color: greenyellow;
-  }
+
   #topMetrics {
     margin-top: 1.5em;
     padding-right: 1em;
     width: 250px;
   }
-  div {
+  /* div {
     border-radius: 0.5em;
-    /* box-shadow: 4px 4px 8px black; */
     border: solid white 1.5px;
-  }
+  } */
   h2 {
     font-size: 1.5em;
     color: white;

@@ -29,10 +29,8 @@
   function updateData(metrics) {
     chartData = {
       title: 'System metrics',
-      labels: metrics?.map((x) => {
-        let time = new Date(x.time)
-        return `${time.getMinutes()} : ${time.getSeconds()}`
-      }),
+      labels: metrics?.map((x) => x.time),
+      // return `${time.getMinutes()} : ${time.getSeconds()}`
       datasets: [
         {
           label: 'cpu usage percentage',

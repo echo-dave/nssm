@@ -1,0 +1,41 @@
+body {
+    background-color: rgb(41, 41, 41);
+    font-size: 14px;
+    color: white;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+div,
+canvas {
+    border-radius: 1em;
+    border: solid 1px;
+    border-color: rgb(17, 217, 217);
+}
+canvas {
+    padding: 0.25em;
+    box-sizing: content-box;
+}
+.inner-chart-container {
+    /* width: 100%; */
+    margin-bottom: 1em;
+    box-sizing: border-box;
+}
+
+div.no-border {
+    border: unset;
+}
+
+.hostname {
+    font-size: 1.25em;
+    font-weight: 800;
+    color: greenyellow;
+}
+
+button {
+    border-radius: 0.5em;
+    padding: 2px 4px;
+    min-width: 4em;
+    height: 2.4em;
+    background-color: whitesmoke;
+    margin: 1em 0.25em;
+}

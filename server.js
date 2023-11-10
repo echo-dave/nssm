@@ -35,8 +35,21 @@ export default async (thresholds, isHeadless) => {
       await res.json(startingData)
     } catch (e) {
       console.error(e)
-    } finally {
-      client.close()
+    }
+  })
+
+  app.get('/api/tsClientData/count/:count', async (req, res) => {
+    console.log('count', parseInt(req.params.count.slice(1)))
+    try {
+      let changeData = await telemetry
+        .find({ 'meta.hostname': 'Brilliance' })
+        .sort({ time: -1 })
+        .limit(parseInt(req.params.count.slice(1)))
+        .toArray()
+      console.log('sending data chang count')
+      await res.json(changeData)
+    } catch (e) {
+      console.error(e)
     }
   })
 
