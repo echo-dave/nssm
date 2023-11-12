@@ -1,4 +1,6 @@
 <script>
+  import CurrentUsage from '$lib/charts/CurrentUsage.svelte'
+
   export let metrics
   $: currentTime = metrics.at(-1)?.time.toLocaleString('default', {
     year: 'numeric',
@@ -12,15 +14,25 @@
 </script>
 
 <flexbox>
-  <h2>Simple <br />System Monitor</h2>
   <div id="liveSysData">
-    <ul id="topMetrics">
-      <li><span class="hostname">{metrics.at(-1)?.meta.hostname}</span></li>
-      <li>Cpu:{(metrics.at(-1)?.cpu * 100).toFixed(2)}%</li>
-      <li>Mem:{(metrics.at(-1)?.usedMem * 100).toFixed(2)}%</li>
+    <div class="no-border" style="flex: 1 1;">
+      <span class="hostname">{metrics.at(-1)?.meta.hostname}</span>
+      <div class="meters no-border">
+        <div class="currentUsage no-border">
+          <CurrentUsage metrics={metrics.at(-1)?.usedMem} labelChart="MEM" titleText="Used MEM" />
+        </div>
+        <div class="currentUsage no-border">
+          <CurrentUsage metrics={metrics.at(-1)?.cpu} labelChart="CPU" titleText="Used CPU" />
+        </div>
+      </div>
+    </div>
+    <ul id="topMetrics" style="flex: 1 1;">
+      <li><h2>Simple <br />System Monitor</h2></li>
+
+      <!-- <li>Cpu:{(metrics.at(-1)?.cpu * 100).toFixed(2)}%</li>
+      <li>Mem:{(metrics.at(-1)?.usedMem * 100).toFixed(2)}%</li> -->
       <li>
-        Total Mem <br />
-        Reported:{metrics.at(-1)?.totalMem}M
+        Mem Reported:{metrics.at(-1)?.totalMem}M
       </li>
       <li style="color: magenta;">
         {currentTime}
@@ -32,8 +44,16 @@
 <style>
   #liveSysData {
     height: 12em;
+    display: flex;
+    flex-direction: row;
   }
-
+  .meters {
+    display: flex;
+    flex-direction: row;
+  }
+  .meters div {
+    flex: 1 1;
+  }
   flexbox {
     display: flex;
     flex-direction: row-reverse;
@@ -52,6 +72,11 @@
   }
   li {
     margin-left: -1.5em;
+  }
+
+  .currentUsage {
+    width: 150px;
+    height: 150px;
   }
 
   @media screen and (max-width: 540px) {

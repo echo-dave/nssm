@@ -22,8 +22,6 @@ const options = {
     tooltip: {
       callbacks: {
         footer: (context) => {
-          console.log(context[context[0].datasetIndex].dataset.data[context[0].dataIndex])
-          //console.log(context.dataset.data[context[0].datasetIndex])
           const itemOobject = context[context[0].datasetIndex].dataset.data[context[0].dataIndex]
           return [`pid: ${itemOobject.pid}`, `user: ${itemOobject.user}`]
         }

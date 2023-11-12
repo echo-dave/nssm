@@ -19,11 +19,21 @@ const options = {
         // For a category axis, the val is the index so the lookup via getLabelForValue is needed
         callback: function (val, index) {
           // Hide every 2nd tick label
-          return index % 5 === 0 ? this.getLabelForValue(val) : ''
+          return index % 5 === 0
+            ? this.getLabelForValue(val).toLocaleString('default', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+              })
+            : ''
         },
         color: 'white',
         grid: { display: false },
-        display: false
+        display: true,
+        maxRotation: 0,
+        minRotation: 0,
+        align: 'inner'
       }
     },
     y: {

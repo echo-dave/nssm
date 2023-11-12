@@ -9,11 +9,13 @@
 
 :root {
     --header-font-family: IBMPlexMono-Light, "Courier New", Courier, monospace;
+    --textColor: rgb(250, 250, 250);
+    --borderColor: rgb(17, 217, 217);
 }
 
 body {
     background-color: rgb(41, 41, 41);
-    color: white;
+    color: var(--textColor);
     font-family: Montserrat-light, Verdana, Geneva, Tahoma, sans-serif;
     letter-spacing: 0.15em;
     margin: 1.5em 1em 0;
@@ -32,7 +34,7 @@ div,
 canvas {
     border-radius: 1em;
     border: solid 1px;
-    border-color: rgb(17, 217, 217);
+    border-color: var(--borderColor);
 }
 
 #main-charts {
@@ -74,14 +76,14 @@ canvas {
     box-sizing: border-box;
 }
 
-div.no-border {
+.no-border {
     border: unset;
 }
 
 .hostname {
     font-size: 1.25em;
     font-weight: 800;
-    color: greenyellow;
+    color: rgb(171, 255, 46);
 }
 
 button {

@@ -7,7 +7,7 @@
 
   export let metrics
   let chartData
-  let skip = false
+  let skip = true
 
   function updateData(metrics) {
     skip = !skip
@@ -18,7 +18,7 @@
 
     chartData = {
       title: 'Processes',
-      labels: metrics?.at(-1)?.processes.cpu.map((x) => x.process),
+      // labels: metrics?.at(-1)?.processes.cpu.map((x) => x.process),
       datasets: [
         {
           backgroundColor: [
