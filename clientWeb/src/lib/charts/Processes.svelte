@@ -18,9 +18,7 @@
 
     chartData = {
       title: 'Processes',
-      labels: metrics
-        ?.at(-1)
-        ?.processes.cpu.map((x) => x.process.replace(/^(com.)/, '').slice(0, 13)),
+      labels: metrics?.at(-1)?.processes.cpu.map((x) => x.process),
       datasets: [
         {
           backgroundColor: [
@@ -34,9 +32,10 @@
             '#ff7c43',
             '#ffa600'
           ],
-          parse: false,
-          label: 'Processes',
-          data: metrics?.at(-1)?.processes.cpu.map((x) => x.cpu)
+          parsing: { xAxisKey: 'process', yAxisKey: 'cpu' },
+          label: '',
+          data: metrics?.at(-1)?.processes.cpu
+          // data: metrics?.at(-1)?.processes.cpu.map((x) => x.cpu)
         }
       ]
     }
