@@ -13,11 +13,19 @@
 
 body {
     background-color: rgb(41, 41, 41);
-    font-size: 14px;
     color: white;
     font-family: Montserrat-light, Verdana, Geneva, Tahoma, sans-serif;
     letter-spacing: 0.15em;
     margin: 1.5em 1em 0;
+    p {
+        font-size: 14px;
+    }
+    h2 {
+        font-size: 1.5em;
+        text-shadow: 1.5px 1.5px 1.5px black;
+        font-family: var(--header-font-family);
+        margin-top: 0;
+    }
 }
 
 div,

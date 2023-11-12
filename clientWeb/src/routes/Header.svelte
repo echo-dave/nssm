@@ -1,5 +1,14 @@
 <script>
   export let metrics
+  $: currentTime = metrics.at(-1)?.time.toLocaleString('default', {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  })
 </script>
 
 <flexbox>
@@ -13,7 +22,9 @@
         Total Mem <br />
         Reported:{metrics.at(-1)?.totalMem}M
       </li>
-      <li style="color: magenta;">{metrics.at(-1)?.time}</li>
+      <li style="color: magenta;">
+        {currentTime}
+      </li>
     </ul>
   </div>
 </flexbox>
@@ -35,14 +46,6 @@
     margin-top: 1.5em;
     padding-right: 1em;
     width: 250px;
-  }
-
-  h2 {
-    font-size: 1.5em;
-    color: white;
-    text-shadow: 1.5px 1.5px 1.5px black;
-    font-family: var(--header-font-family);
-    margin-top: 0;
   }
   ul {
     list-style-type: none;

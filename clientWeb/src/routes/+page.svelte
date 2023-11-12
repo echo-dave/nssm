@@ -66,7 +66,7 @@
         <TimeScaleButton bind:minutes time={timeElement} {changeDataLength} />
       {/each}
     </div>
-    <h2>History for the last {minutes} minutes</h2>
+    <span id="lineCharInfo">History for the last {minutes} minutes</span>
   </div>
   <div class="right no-border"></div>
 </div>
@@ -86,10 +86,11 @@
     flex-direction: row;
     justify-content: space-around;
   }
-  #chartTimeScaleButtons h2 {
+  #lineCharInfo {
     /* text-align: center; */
     margin-top: 0;
     flex: 0 0;
+    font-size: 1.2em;
   }
   div.left,
   div.right {
