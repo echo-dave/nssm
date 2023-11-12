@@ -27,6 +27,6 @@
 
 <style>
   button.timeSelection {
-    background-color: rgb(17, 217, 217);
+    background-color: var(--buttonBackgroundColor);
   }
 </style>

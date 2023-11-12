@@ -92,6 +92,14 @@
     flex: 0 0;
     font-size: 1.2em;
   }
+  #main-charts {
+    display: flex;
+    flex-direction: row;
+    max-width: 100vw;
+    gap: 1.5em;
+    justify-content: center;
+  }
+
   div.left,
   div.right {
     flex: 1 1;
@@ -100,5 +108,23 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+  @media screen and (max-width: 720px) {
+    #chartTimeScaleButtons {
+      flex-direction: column;
+    }
+    .left {
+      text-align: center;
+      margin-bottom: 0.5em;
+      margin-top: 0.5em;
+    }
+    #main-charts {
+      flex-direction: column;
+    }
+    .chart-container,
+    .chart-processes {
+      width: calc(95vw - 0.7em);
+      justify-content: center;
+    }
   }
 </style>

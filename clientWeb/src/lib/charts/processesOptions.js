@@ -1,7 +1,8 @@
 //options
 const options = {
   responsive: true,
-  aspectRatio: 1.59,
+  aspectRatio: 1.65,
+  maintainAspectRatio: true,
   scales: {
     x: {
       ticks: {
