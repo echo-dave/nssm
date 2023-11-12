@@ -9,6 +9,7 @@ export const load = async ({ fetch }) => {
     data.map(async (el) => {
       el.time = new Date(el.time)
     })
+    data.reverse()
     return { data }
   } catch (e) {
     console.error(e)

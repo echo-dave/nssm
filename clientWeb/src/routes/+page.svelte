@@ -28,8 +28,8 @@
   })
 
   const changeDataLength = () => {
-    console.log('update length')
-    console.log('minutes: ', minutes)
+    // console.log('update length')
+    // console.log('minutes: ', minutes)
     let dataPointsCount = minutes * 30
     if (metrics.length > dataPointsCount) {
       metrics = metrics.slice(-dataPointsCount)
@@ -37,15 +37,20 @@
     if (dataPointsCount > metrics.length) {
       updateDataPoints(dataPointsCount)
     }
-    console.log(metrics.length, 'count', dataPointsCount)
+    // console.log(metrics.length, 'count', dataPointsCount)
   }
   const updateDataPoints = async (count) => {
-    console.log('update points')
+    // console.log('update points')
     try {
       if (count > metrics.length + 1) {
-        console.log('updating metrics')
-        const res = await fetch(`/api/tsClientData/count/:${count}`)
-        metrics = await res.json()
+        // console.log('updating metrics')
+        let res = await fetch(`/api/tsClientData/count/:${count}`)
+        res = await res.json()
+        res.map(async (el) => {
+          el.time = new Date(el.time)
+        })
+        res.reverse()
+        metrics = res
       }
     } catch (e) {
       console.error(e)

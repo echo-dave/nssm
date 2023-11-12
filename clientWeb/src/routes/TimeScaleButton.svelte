@@ -4,10 +4,15 @@
   export let changeDataLength
 
   const setButtonActive = (el) => {
-    console.log('button run')
-    let activeButton = document.querySelectorAll('.timeSelection')
-    activeButton.classList.remove('timeSelection')
-    el.target.closest('button').classList.add('timeSelection')
+    // console.log('button run')
+    try {
+      // let activeButton = document.querySelectorAll('.timeSelection')
+      // activeButton.classList.remove('timeSelection')
+      el.target.closest('button').classList.add('timeSelection')
+      // console.log('complete')
+    } catch (e) {
+      console.error(e)
+    }
   }
 </script>
 
@@ -21,7 +26,7 @@
     {
       setButtonActive(e)
     }
-    console.log('click')
+    // console.log('click')
   }}>{time}m</button
 >
 

@@ -45,6 +45,11 @@
     }
   }
   $: updateData(metrics)
+  // $: if (metrics) {
+  //   chartData.datasets[0].data = metrics?.map((x) => (x.cpu * 100).toFixed(2))
+  //   chartData.labels = metrics?.map((x) => x.time)
+  //   options = options
+  // }
   ChartJS.defaults.color = 'white'
   // $: data = data
   // chartRef.update()

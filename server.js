@@ -2,7 +2,7 @@ import 'dotenv/config'
 import express from 'express'
 import { Server } from 'socket.io'
 import { createServer } from 'node:http'
-// import { handler } from './clientWeb/build/handler.js'
+import { handler } from './clientWeb/build/handler.js'
 import getTelemetry from './utils/getTelemetry.js'
 import { telemetry, client } from './utils/dbcon.js'
 import { log } from 'node:console'
@@ -59,7 +59,7 @@ export default async (thresholds, isHeadless) => {
   // let data = await getTelemetry(thresholds, true)
 
   // await pingMongo()
-  // app.use(handler)
+  app.use(handler)
 
   httpServer.listen(PORT, () => {
     console.log(chalk.yellowBright.bgBlack(`NSSM listening on port ${PORT}`))
