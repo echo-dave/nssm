@@ -5,6 +5,8 @@ import { createServer } from 'node:http'
 import { handler } from './clientWeb/build/handler.js'
 import getTelemetry from './utils/getTelemetry.js'
 import { telemetry, client } from './utils/dbcon.js'
+import { hostname } from 'node:os'
+import getHostnames from './api/getHostnames.js'
 import { log } from 'node:console'
 import { ping as pingMongo } from './utils/dbcon.js'
 import chalk from 'chalk'
@@ -23,34 +25,47 @@ export default async (thresholds, isHeadless) => {
       console.log('user disconnected')
     })
   })
+  const serverName = hostname()
+
+  app.get('/api/gethostnames', async (req, res) => {
+    try {
+      let hostnames = await getHostnames()
+      //appending current server to the end of the array
+      res.json([...hostnames, serverName])
+    } catch (e) {
+      console.error({ error: e, msg: `nat able to fetch hostnames` })
+    }
+  })
 
   app.get('/api/tsClientData', async (req, res) => {
     try {
       let startingData = await telemetry
-        .find({ 'meta.hostname': 'Brilliance' })
+        .find({ 'meta.hostname': serverName })
         .sort({ time: -1 })
         .limit(300)
         .toArray()
       console.log('sending data')
-      await res.json(startingData)
+      res.json(startingData)
     } catch (e) {
       console.error(e)
     }
   })
 
   app.get('/api/tsClientData/count/:count', async (req, res) => {
-    console.log('count', parseInt(req.params.count.slice(1)))
     try {
       let changeData = await telemetry
-        .find({ 'meta.hostname': 'Brilliance' })
+        .find({ 'meta.hostname': serverName })
         .sort({ time: -1 })
-        .limit(parseInt(req.params.count.slice(1)))
+        .limit(parseInt(req.params.count))
         .toArray()
-      console.log('sending data chang count')
-      await res.json(changeData)
+      res.json(changeData)
     } catch (e) {
       console.error(e)
     }
+  })
+
+  app.get('/api/serverchange/:host', async (req, res) => {
+    res.status(200).json(req.params.host)
   })
 
   // let thresholds = { memThreshold: 0.1, cpuThreshold: 0.1 }
@@ -62,7 +77,12 @@ export default async (thresholds, isHeadless) => {
   app.use(handler)
 
   httpServer.listen(PORT, () => {
-    console.log(chalk.yellowBright.bgBlack(`NSSM listening on port ${PORT}`))
+    console.log(
+      chalk.greenBright(serverName),
+      chalk.yellowBright.bgBlack(`NSSM listening on port ${PORT}`)
+    )
+    console.log(chalk.yellowBright.bgBlack(`mem=${thresholds.memThreshold}`))
+    console.log(chalk.yellowBright.bgBlack(`cpu=${thresholds.cpuThreshold}`))
   })
   // getAvgMem(22)
 }

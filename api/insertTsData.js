@@ -1,7 +1,5 @@
-import {client,telemetry} from '../utils/dbcon.js'
-import {log} from 'node:console'
-
-
+import { telemetry } from '../utils/dbcon.js'
+import { log } from 'node:console'
 
 let logStartup = 1
 export default async (data) => {
