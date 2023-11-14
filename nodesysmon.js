@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { argv } from 'node:process'
 import parseArgs from './utils/parseArgs.js'
+import startServer from './server.js'
 const argvLength = argv.length
 const thresholds =
   argvLength > 3 && argv[2] === '-s'
@@ -13,8 +14,9 @@ switch (true) {
     ;(async () => {
       const { ping } = await import('./utils/dbcon.js')
       await ping()
-      const { default: getTelemetry } = await import('./utils/getTelemetry.js')
-      getTelemetry(thresholds, 'isHeadless')
+      // const { default: getTelemetry } = await import('./utils/getTelemetry.js')
+      // getTelemetry(thresholds, 'isHeadless')
+      startServer(thresholds, true)
     })()
     break
   //client to remote server
@@ -25,7 +27,10 @@ switch (true) {
     })()
     break
   //local only
-  case argv.slice(2).join(' ').match(/^(-l$|-l -p)$/) !== null:
+  case argv
+    .slice(2)
+    .join(' ')
+    .match(/^(-l$|-l -p)$/) !== null:
     ;(async () => {
       const { default: getTelemetry } = await import('./utils/getTelemetry.js')
       getTelemetry(thresholds)
@@ -33,11 +38,9 @@ switch (true) {
     break
 
   default:
-    (async() =>{
-    const {default: help} = await import('./utils/argHelpInfo.js')
-    help()
+    ;(async () => {
+      const { default: help } = await import('./utils/argHelpInfo.js')
+      help()
     })()
     break
 }
-
-

@@ -7,24 +7,64 @@ const alert2 = chalk.bgRedBright.whiteBright.bold
 const alert = chalk.bgYellow.bold
 const warn = chalk.yellow.bgBlack
 
+// const getCpuUsage = async () => {
+//   const cpuData = cpus()
+//   let accumulator = { user: 0, sys: 0, idle: 0 }
+//   cpuData.forEach((el, i) => {
+//     accumulator.user += el.times.user
+//     accumulator.sys += el.times.sys
+//     accumulator.idle += el.times.idle
+//   })
+//   const { user, sys, idle } = accumulator
+//   const cpuUsed = (user + sys) / (user + sys + idle)
+//   return { cpu: cpuUsed.toFixed(4) }
+// }
+
+let cpuStart = cpus()
 const getCpuUsage = async () => {
-  const cpuData = cpus()
-  let accumulator = { user: 0, sys: 0, idle: 0 }
-  cpuData.forEach((el, i) => {
-    accumulator.user += el.times.user
-    accumulator.sys += el.times.sys
-    accumulator.idle += el.times.idle
+  const getCpuUse = function (cpuTick) {
+    let totals = { user: 0, sys: 0, idle: 0 }
+    cpuTick.forEach((el) => {
+      totals.user += el.times.user
+      totals.sys += el.times.sys
+      totals.idle += el.times.idle
+    })
+    return totals
+  }
+  return await new Promise((res, rej) => {
+    try {
+      setTimeout(() => {
+        let cpuEnd = cpus()
+        cpuStart = getCpuUse(cpuStart)
+        let cpuEndCalc = getCpuUse(cpuEnd)
+        let currentCPU = {}
+        currentCPU.user = cpuEndCalc.user - cpuStart.user
+        currentCPU.idle = cpuEndCalc.idle - cpuStart.idle
+        currentCPU.sys = cpuEndCalc.sys - cpuStart.sys
+        cpuStart = cpuEnd
+
+        let cpuPercent =
+          (currentCPU.user + currentCPU.sys) /
+          (currentCPU.user + currentCPU.idle + currentCPU.sys)
+
+        res({ cpu: cpuPercent.toFixed(4) })
+      }, 2000)
+    } catch (e) {
+      console.error({ error: 'e', msg: 'our cpu calcuation broke' })
+    }
   })
-  const { user, sys, idle } = accumulator
-  const cpuUsed = (user + sys) / (user + sys + idle)
-  return { cpu: cpuUsed.toFixed(4) }
+  // return { cpu: cpuUsed.toFixed(4) }
 }
 
 const getMemUsage = async () => {
   const freeMemory = freemem()
   const totalMem = totalmem()
   const usedMemory = (totalMem - freeMemory) / totalMem
-  return { usedMem: usedMemory.toFixed(4), freeMem: freeMemory,totalMem: totalMem }
+  return {
+    usedMem: usedMemory.toFixed(4),
+    freeMem: freeMemory,
+    totalMem: totalMem,
+  }
 }
 
 const systemUsage = async () => {
@@ -32,7 +72,7 @@ const systemUsage = async () => {
   const cpu = await getCpuUsage()
   const mem = await getMemUsage()
   mem.freeMem = (mem.freeMem / 1_000_000).toFixed(2) //convert to megabytes from bytes
-  mem.totalMem = (mem.totalMem / 1_000_000).toFixed(2)  //converting to MB
+  mem.totalMem = (mem.totalMem / 1_000_000).toFixed(2) //converting to MB
   return {
     time: timeStamp,
     meta: {},
@@ -45,7 +85,7 @@ const systemUsage = async () => {
 
 let cpuProcs = []
 let memProcs = []
-export default async (thresholds, isHeadless) => {
+export default async (thresholds, isHeadless, io) => {
   setInterval(async () => {
     const report = await systemUsage()
     report.meta = { hostname: hostname() }
@@ -119,7 +159,9 @@ Time:\t\t ${chalk.magenta(time)}
       if (report.processes && JSON.stringify(report.processes) == '{}')
         delete report.processes
       // console.dir(report, { depth: null, colors: true })
+      // console.log(report)
       sendData(report)
+      io.emit('new data', report)
     }
   }, 2000)
 }
