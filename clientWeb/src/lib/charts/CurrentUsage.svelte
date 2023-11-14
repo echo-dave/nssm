@@ -7,19 +7,21 @@
   export let metrics
   export let labelChart
   export let titleText
+  export let color
 
   let chartData
   chartData = {
     labels: [labelChart, 'unused'],
     datasets: [
       {
-        backgroundColor: ['orange', 'rgba(0, 0, 0, .1)'],
+        backgroundColor: [color, 'rgba(0, 0, 0, .1)'],
         data: [metrics, 1 - metrics]
       }
     ]
   }
 
   let options = {
+    animations: false,
     cutout: '65%',
     scales: {
       yAxes: {
@@ -42,7 +44,10 @@
       }
     }
   }
-  $: if (metrics) chartData.datasets[0].data = [metrics, 1 - metrics]
+  $: if (metrics) {
+    chartData.datasets[0].data = [metrics, 1 - metrics]
+    // console.log('meters data update')
+  }
 </script>
 
 <!-- 

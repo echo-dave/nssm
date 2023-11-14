@@ -12,8 +12,8 @@
     --textColor: rgb(250, 250, 250);
     --borderColor: rgb(17, 217, 217);
     --buttonBackgroundColor: rgb(17, 217, 217);
+    --font-main: "Montserrat-light", Verdana, Geneva, Tahoma, sans-serif;
 }
-
 body {
     background-color: rgb(41, 41, 41);
     color: var(--textColor);
@@ -21,13 +21,18 @@ body {
     letter-spacing: 0.15em;
     margin: 1.5em 1em 0;
     p {
-        font-size: 14px;
+        font-size: 1em;
     }
-    h2 {
+    h1 {
         font-size: 1.5em;
         text-shadow: 1.5px 1.5px 1.5px black;
         font-family: var(--header-font-family);
         margin-top: 0;
+    }
+    h2 {
+        font-size: 1.2em;
+        font-family: var(--font-main);
+        font-weight: unset;
     }
 }
 
@@ -58,6 +63,11 @@ canvas {
     height: 500px;
     flex: 1 1;
     overflow: hidden;
+    position: relative;
+}
+.chart-processes canvas,
+.chart-container canvas {
+    letter-spacing: normal;
 }
 // .chart-processes {
 //     // display: flex;
