@@ -46,7 +46,7 @@
         })
       })
     } catch (e) {
-      console.error(e)
+      console.warn(e)
     }
   }
   $: if (metrics) updateData(metrics)

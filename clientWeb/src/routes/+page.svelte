@@ -44,6 +44,9 @@
       if (count > metrics.length + 1) {
         // console.log('updating metrics')
         let res = await fetch(`/api/tsClientData/count/${count}`)
+        if (!res.ok) {
+          throw new Error({ error: res, msg: 'Failed to get client data' })
+        }
         res = await res.json()
         res.map(async (el) => {
           el.time = new Date(el.time)
@@ -52,7 +55,7 @@
         metrics = res
       }
     } catch (e) {
-      console.error(e)
+      console.warn(e)
     }
   }
 

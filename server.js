@@ -33,7 +33,7 @@ export default async (thresholds, isHeadless) => {
       //appending current server to the end of the array
       res.json([...hostnames, serverName])
     } catch (e) {
-      console.error({ error: e, msg: `nat able to fetch hostnames` })
+      console.error({ error: e, msg: `Not able to fetch hostnames` })
     }
   })
 
@@ -47,7 +47,10 @@ export default async (thresholds, isHeadless) => {
       console.log('sending data')
       res.json(startingData)
     } catch (e) {
-      console.error(e)
+      console.error({
+        error: e,
+        msg: 'error getting clent data from change stream',
+      })
     }
   })
 
@@ -60,7 +63,10 @@ export default async (thresholds, isHeadless) => {
         .toArray()
       res.json(changeData)
     } catch (e) {
-      console.error(e)
+      console.error({
+        error: e,
+        msg: 'Not able to udpate metrics array length',
+      })
     }
   })
 
@@ -68,12 +74,8 @@ export default async (thresholds, isHeadless) => {
     res.status(200).json(req.params.host)
   })
 
-  // let thresholds = { memThreshold: 0.1, cpuThreshold: 0.1 }
   getTelemetry(thresholds, true, io)
 
-  // let data = await getTelemetry(thresholds, true)
-
-  // await pingMongo()
   app.use(handler)
 
   httpServer.listen(PORT, () => {

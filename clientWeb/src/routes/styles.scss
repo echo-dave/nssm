@@ -1,10 +1,14 @@
 @font-face {
     font-family: "IBMPlexMono-light";
     src: url("$lib/fonts/IBMPlexMono-Light.otf");
+    font-style: normal;
+    font-display: swap;
 }
 @font-face {
     font-family: "Montserrat-light";
     src: url("$lib/fonts/Montserrat-light.ttf");
+    font-style: normal;
+    font-display: swap;
 }
 
 :root {
@@ -20,6 +24,7 @@ body {
     font-family: Montserrat-light, Verdana, Geneva, Tahoma, sans-serif;
     letter-spacing: 0.15em;
     margin: 1.5em 1em 0;
+    font-synthesis: none;
     p {
         font-size: 1em;
     }

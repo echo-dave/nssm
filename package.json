@@ -1,8 +1,8 @@
 {
   "name": "nodesysmon",
-  "version": "0.2.0",
+  "version": "0.6.0",
   "description": "Node simple system monitoring",
-  "main": "index.js",
+  "main": "nodesysmon.js",
   "engines": {
     "node": "^20.9.0"
   },
@@ -12,9 +12,10 @@
     "url": "https://github.com/echo-dave/nssm.git"
   },
   "bin": {
-    "nssm": "./nssm.js"
+    "nssm": "./nodesysmon.js"
   },
   "scripts": {
+    "postinstall": "cd clientWeb && npm i && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "local": "node server.js",
     "server": "HEADLESS=headless node server.js",

@@ -17,8 +17,8 @@ const options = {
           return value.replace(/^(com.)/, '').slice(0, 13)
           // return index % 2 === 0 ? this.getLabelForValue(val) : '';
         },
-        maxRotation: 90,
-        minRotation: 60,
+        maxRotation: 50,
+        minRotation: 30,
         grid: { display: false },
         offset: true,
         autoSkip: false

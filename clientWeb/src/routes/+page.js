@@ -1,4 +1,4 @@
-// export const ssr = false
+export const ssr = false
 export const load = async ({ fetch }) => {
   try {
     const res = await fetch('/api/tsClientData')
@@ -13,6 +13,6 @@ export const load = async ({ fetch }) => {
     metrics.reverse()
     return { metrics }
   } catch (e) {
-    console.error(e)
+    console.warn({ error: e, msg: 'Unable to fetch initial client data' })
   }
 }
