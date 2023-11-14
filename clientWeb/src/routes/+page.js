@@ -5,12 +5,13 @@ export const load = async ({ fetch }) => {
     if (!res.ok) {
       throw new Error(`HTTP error: ${res.status}`)
     }
-    const data = await res.json()
-    data.map(async (el) => {
+    const metrics = await res.json()
+
+    metrics.map(async (el) => {
       el.time = new Date(el.time)
     })
-    data.reverse()
-    return { data }
+    metrics.reverse()
+    return { metrics }
   } catch (e) {
     console.error(e)
   }

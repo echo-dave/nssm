@@ -11,14 +11,13 @@
   const socket = io()
   // import { background } from '../store'
 
-  let metrics = []
+  let metrics
   let minutes = 10
   let time = [0.5, 15, 60]
-
+  let hostnames
   export let data
   onMount(async () => {
-    metrics = data.data
-
+    metrics = data.metrics
     socket.on('new data', (newData) => {
       newData.time = new Date(newData.time)
       metrics = [...metrics, newData]
@@ -44,7 +43,7 @@
     try {
       if (count > metrics.length + 1) {
         // console.log('updating metrics')
-        let res = await fetch(`/api/tsClientData/count/:${count}`)
+        let res = await fetch(`/api/tsClientData/count/${count}`)
         res = await res.json()
         res.map(async (el) => {
           el.time = new Date(el.time)
@@ -81,6 +80,7 @@
     <MemData {metrics} />
   </div>
   <div class="chart-processes no-border">
+    <h2 class="chartTitle">Processes by CPU use</h2>
     <Processes {metrics} />
   </div>
 </section>
@@ -104,6 +104,17 @@
     gap: 1.5em;
     justify-content: center;
   }
+  .chartTitle {
+    font-size: 0.8em;
+    text-align: center;
+    margin: 0 auto;
+    z-index: 2;
+    position: absolute;
+    top: 1em;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+  }
 
   div.left,
   div.right {
@@ -114,6 +125,7 @@
     flex-direction: column;
     align-items: center;
   }
+
   @media screen and (max-width: 720px) {
     #chartTimeScaleButtons {
       flex-direction: column;
