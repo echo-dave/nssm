@@ -26,25 +26,28 @@
   export let metrics
   // console.log(metrics)
   let chartData
-  function updateData(metrics) {
-    chartData = {
-      title: 'System metrics',
-      labels: metrics?.map((x) => x.time),
-      // return `${time.getMinutes()} : ${time.getSeconds()}`
-      datasets: [
-        {
-          label: 'cpu usage percentage',
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0,
-          data: metrics?.map((x) => (x.cpu * 100).toFixed(2)),
-          showLine: true,
-          borderWidth: 1
-        }
-      ]
-    }
+  async function updateData(metrics) {
+    chartData = await new Promise(async (res, rej) => {
+      await metrics
+      res({
+        title: 'System metrics',
+        labels: metrics?.map((x) => x.time),
+        // return `${time.getMinutes()} : ${time.getSeconds()}`
+        datasets: [
+          {
+            label: 'cpu usage percentage',
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0,
+            data: metrics?.map((x) => (x.cpu * 100).toFixed(2)),
+            showLine: true,
+            borderWidth: 1
+          }
+        ]
+      })
+    })
   }
-  $: updateData(metrics)
+  $: if (metrics) updateData(metrics)
   // $: if (metrics) {
   //   chartData.datasets[0].data = metrics?.map((x) => (x.cpu * 100).toFixed(2))
   //   chartData.labels = metrics?.map((x) => x.time)
@@ -63,11 +66,8 @@
 </script>
 
 <!-- <div class="inner-chart-container" style="position: relative;"> -->
-{#if JSON.stringify(metrics) !== ''}
+{#await metrics && chartData then}
   <Line class="inner-chart-container" data={chartData} {options} />
-{/if}
+{/await}
 
 <!-- </div> -->
-
-<style>
-</style>
