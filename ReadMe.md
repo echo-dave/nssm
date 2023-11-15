@@ -1,65 +1,114 @@
-# Node Simple System Monitor
-![nssm promp](readme/nssmScript.jpg)
-![nssm screen](readme/nssm.jpg)
-## What is this?
-Right now it's a basic cli system monitor tested for MacOS and Linux (Unbuntu LTS) monitoring. 
+# Nodesysmon
 
-Requires [NodeJS](https://nodejs.org/en)
-also avaialbe via most pakage magagers: apt, brew, etc
+a simple system monitor
+![cli nodesysmon](readme/cliCombined.jpg)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/7841499643c94833b32b7e366c05c051)](https://app.codacy.com/gh/echo-dave/nodesysmon/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/echo-dave/nodesysmon)
 
-There are 3 working modes
-* local - just runs locally with no databasing
-* client - for monitoring a remote server via Mongo database
-* server - for gathering data and sending to Mongo (it will need to have a deamon setup)
-It's now possible to use ctrl-N to change to another server to monitor without have to exit.
+v0.6 Rename + web client - ssm and nssm were taken on npm so I've renamed to nodesysmon - this means the git url has changed so you'll need to update url for existing clones. `git@github.com:echo-dave/nodesysmon.git`
 
-## What does it actually monitor?
-* Currently it's basically monitoring cpu and ram
-* logging to database 
-* process logging after threshold crossings 
-    * cpu, ram, pid, process time, user, command  
-    
-Unfortunately I haven't been able to get a ps view to differentiate between all the differen node processes whithout being all the arguments and several lines a process - notably vscode remote.
+![web client nodesysmon](readme/webcombined.jpg)
 
-### Packages
-* Express
-* Chalk for coloring headers, hostname, alerts
-* Mongodb for database
-* dotenv for Mongodb things
-* inquirer for cli prompt for picking which host to monitor
+[#Installation](#installation) [#Running](#running) [#Tech](#tech)
 
-I may remove the os version from the top of the monitoring (it isn't logged, but was informative when looking at scripting issues).
+## Simple System Monitoring
 
-### Where is it goign?
-1. It needs a web frontend and a mobile app to be able to chart / look at any historicals. 
-2. I'd like to do some network monitoring, but have to think about how to gather that data.
-3. open to suggestions - open an issue with any thoughts
+Monitoring realtime CPU, Memory, and process list sorted by cpu / mem
 
-### What's the timeline on things?
-Unkown - my iOS dev is entry level, but a web frontend shouldn't be too far out. Nailing down the backend / cli requirements first.
+- Server mode for collecting data and sending to db
+- local only mode for monitoring current system
+- client cli for monitoring via database
+- client web monitoring via the server
 
-## How to run
-Minimally you can clone the repo, `npm i`, and then run ``./nssm.js -l`` to run local monitoring
-```
-npm -i
-./nssm.js
-```
-For logging and remote monitoring you just need a mongodb
-and add `.env` to the root dir and add:  
-```
-MONGO_URI=<paste connection string>  
-MONGO_DB=<name of database you created>  
-nssmCollection=<name your collection>      
-```
-(nssm will create the collection and add the ttl index to it)
-The ttl is set to 3 days currently
+## Installation
 
-Threshold options added for server:
+### Requirements
+
+- [node](https://nodejs.org/en) from your package manager of choice.
+- [MongoDB](http://mongodb.com) v6+
+- Mac or Linux server (untested on Windows but expect issues)
+
+### Install
+
+clone repo to a web directory: /var/www on linux usually
+
 ```bash
-./nssm.js -s mem=.75 cpu=.8
+npm i
+npm link #optional for easier access - see Running below
 ```
 
-#### How does it work?
-1. The metrics at the top of the screen that continuosly monitor cpu and ram is all pulled through native node api.
-2. The process list is being pull through bash scripts that do a ps | head | awk that gats parsed out and formated in node. I suspect ps will be a problem on windows and may need something using taskList? instead from some reading.
-3. The 2 sets of metrics are displayed seperately but combined into an object for Mong. 
+### Configuration
+
+You will need to create a new file `.env` in the base folder and add some MongoDB info:
+
+```editorconfig
+MONGO_URI=<paste connection string>
+MONGO_DB=<name of database you created>
+nssmCollection=<name your collection>
+```
+
+Running the server should setup the collection if it doesn't already exist and add the indexes
+
+### Running
+
+if linked:
+`nodesysmon -s mem=.5 cpu=.8`
+otherwise:
+`./nodesysmon.js -s mem=.0 cpu=0`
+zeroing the thresholds means it will continuously monitor and log processes vs setting a higher threshold to reduce server / db load. Defualt thresholds are set to .5 (50% useage) It should really be setup in a daemon for the server running. [#running as a daemon](#running-as-a-daemon)
+
+Other options:  
+ -l for local monitoring no logging  
+ -c for cli client reading straigt off the db  
+ ./nodesysmon will output help info with no / bad input
+connecting via web browser
+
+## Tech
+
+### Package dependencies
+
+- Express
+- Chalk for coloring headers, hostname, alerts
+- Mongodb for database
+- dotenv for Mongodb things
+- inquirer for cli prompt for picking which host to monitor
+- Sveltekit for the front end web client
+- Socketio connecting server and client for realtime data
+
+### How it works
+
+1. The metrics at the top of the screen that continuously monitor cpu and ram is all pulled through native node api.
+2. The process list is being pull through bash scripts that do a ps | head | awk that gats parsed out and formatted in node. I suspect ps will be a problem on windows and may need something using taskList? instead from some reading.
+3. The 2 sets of metrics are displayed separately but combined into a single object for Mongo.
+4. Mongo collection has a TTL index that expires data after 3 days (can be adjusted based on feedback).
+
+## Running as a daemon
+
+This is a basic version for linux servers
+
+First we need a service file to for system to to use  
+`sudo touch /lib/systemd/system/nodesysmon.service`
+
+Then we need to put together the basics
+
+- Pick a port that's available on your server
+- Set the threshold values as desired
+
+```
+[Unit]
+Description=nodesysmon
+After=Network.target
+
+[Service]
+Environment=PORT=3000
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/nodesysmon
+ExecStart=nodesysmon mem=0 cpu=0
+Restart=on-failure
+
+[Install]
+Wantedby=multi-user.target
+```
+
+Last we need to tell systemd to actually enable the service  
+`sudo systemctl enable nodesysmon.service`

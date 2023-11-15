@@ -6,6 +6,7 @@ export default async () => {
   const hostnames = await getHostnames()
 
   const inquirerPrompt = async () => {
+    console.clear()
     return await inquirer.prompt([
       {
         type: 'list',

@@ -14,12 +14,12 @@ const serverChangeHandler = async function () {
     }
     if (key.ctrl === true && key.name === 'n') {
       gettingData = true
+      process.stdin.removeListener('event', () => {})
       const serverChange = setTimeout(async () => {
         const { default: client } = await import('../client.js')
-        console.clear()
         client()
         return true
-      }, 1200)
+      }, 1500)
     }
   })
 }
