@@ -88,7 +88,7 @@ let memProcs = []
 export default async (thresholds, isHeadless, io) => {
   setInterval(async () => {
     const report = await systemUsage()
-    report.meta = { hostname: hostname() }
+    report.meta = { hostname: hostname().replace(/(\.local)$/, '') }
     const { usedMem, freeMem, cpu, time, meta, totalMem } = report
     // report.hostname = hostname()
     //   log(report)

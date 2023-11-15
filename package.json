@@ -12,7 +12,7 @@
     "url": "https://github.com/echo-dave/nssm.git"
   },
   "bin": {
-    "nssm": "./nodesysmon.js"
+    "nodesysmon": "./nodesysmon.js"
   },
   "scripts": {
     "postinstall": "cd clientWeb && npm i && npm run build",

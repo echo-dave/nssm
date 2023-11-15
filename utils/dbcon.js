@@ -1,5 +1,5 @@
-import 'dotenv/config'
 import { MongoClient } from 'mongodb'
+import '../utils/dotEnvConfig.js'
 const { nssmCollection, MONGO_DB, MONGO_URI } = process.env
 const uri = MONGO_URI
 const client = new MongoClient(uri)
