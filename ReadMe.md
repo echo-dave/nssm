@@ -53,7 +53,7 @@ Running the server should setup the collection if it doesn't already exist and a
 if linked:
 `nodesysmon -s mem=.5 cpu=.8`
 otherwise:
-`./nodesysmon -s mem=.0 cpu=0`
+`./nodesysmon.js -s mem=.0 cpu=0`
 zeroing the thresholds means it will continuously monitor and log processes vs setting a higher threshold to reduce server / db load. Defualt thresholds are set to .5 (50% useage) It should really be setup in a daemon for the server running. [#running as a daemon](#running-as-a-daemon)
 
 Other options:  
