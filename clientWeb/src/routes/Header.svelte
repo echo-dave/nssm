@@ -141,6 +141,7 @@
     padding-top: 0.5em;
     display: inline-block;
     cursor: pointer;
+    color: var(--hostname-color);
   }
   #hostnames {
     position: absolute;

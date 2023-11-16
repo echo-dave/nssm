@@ -12,6 +12,7 @@
 }
 
 :root {
+    --hostname-color: rgb(171, 255, 46);
     --header-font-family: IBMPlexMono-Light, "Courier New", Courier, monospace;
     --textColor: rgb(250, 250, 250);
     --borderColor: rgb(17, 217, 217);
@@ -69,6 +70,7 @@ canvas {
     flex: 1 1;
     overflow: hidden;
     position: relative;
+    border: none;
 }
 .chart-processes canvas,
 .chart-container canvas {
@@ -92,14 +94,29 @@ canvas {
 .hostname {
     font-size: 1.25em;
     font-weight: 800;
-    color: rgb(171, 255, 46);
+    // color: rgb(171, 255, 46);
 }
-
-button {
+#time-buttons {
+    button {
+        border-radius: 0.5em;
+        padding: 2px 4px;
+        min-width: 4em;
+        height: 2.4em;
+        margin: 1em 0.25em;
+        cursor: pointer;
+        background-color: #333333;
+        color: white;
+        border-top: #b4b3b3 1px solid;
+        border-left: #b4b3b3 1px solid;
+        border-bottom: solid 1px black;
+        border-right: solid 1px black;
+    }
+    button.timeSelection {
+        background-color: var(--buttonBackgroundColor);
+        color: black;
+    }
+}
+#time-buttons button:hover {
+    border: var(--hostname-color) 2px solid;
     border-radius: 0.5em;
-    padding: 2px 4px;
-    min-width: 4em;
-    height: 2.4em;
-    background-color: whitesmoke;
-    margin: 1em 0.25em;
 }

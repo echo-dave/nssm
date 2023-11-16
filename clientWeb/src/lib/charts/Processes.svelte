@@ -7,23 +7,24 @@
   ChartJS.defaults.font.family = "'Montserrat-light'"
   ChartJS.defaults.font.weight = 'normal'
   export let metrics
+  export let cpuMem
   let chartData
   let skip = true
 
   async function updateData(metrics) {
     try {
       chartData = await new Promise(async (res, rej) => {
-        if (!metrics?.at(-1)?.processes?.cpu) {
+        if (!metrics?.at(-1)?.processes?.[cpuMem]) {
           rej(new Error('No metrics data'))
         }
         skip = !skip
         if (skip === true) return
-        metrics?.at(-1)?.processes.cpu.sort((a, b) => {
+        metrics?.at(-1)?.processes[cpuMem].sort((a, b) => {
           return a.process.toUpperCase() < b.process.toUpperCase() ? -1 : 1
         })
         res({
           title: 'Processes',
-          labels: metrics?.at(-1)?.processes.cpu.map((x) => x.process),
+          labels: metrics?.at(-1)?.processes[cpuMem].map((x) => x.process),
           datasets: [
             {
               backgroundColor: [
@@ -37,9 +38,9 @@
                 '#ff7c43',
                 '#ffa600'
               ],
-              parsing: { xAxisKey: 'process', yAxisKey: 'cpu' },
+              parsing: { xAxisKey: 'process', yAxisKey: cpuMem },
 
-              data: metrics?.at(-1)?.processes.cpu
+              data: metrics?.at(-1)?.processes[cpuMem]
               // data: metrics?.at(-1)?.processes.cpu.map((x) => x.cpu)
             }
           ]

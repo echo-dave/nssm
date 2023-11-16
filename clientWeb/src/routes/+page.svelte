@@ -15,6 +15,7 @@
   let minutes = 10
   let time = [0.5, 15, 60]
   let hostnames
+  let processDisplayCpu = true
   export let data
   onMount(async () => {
     metrics = data.metrics
@@ -62,7 +63,7 @@
   // changeDataLength(minutes)
 </script>
 
-<head> <title>Simple System Monitor</title></head>
+<svelte:head><title>Simple System Monitor</title></svelte:head>
 
 <Header {metrics} />
 
@@ -82,13 +83,50 @@
     <CpuData {metrics} />
     <MemData {metrics} />
   </div>
-  <div class="chart-processes no-border">
-    <h2 class="chartTitle">Processes by CPU use</h2>
-    <Processes {metrics} />
+  <div class="chart-processes">
+    <button
+      id="swapProcesses"
+      class="no-border"
+      on:click={() => (processDisplayCpu = !processDisplayCpu)}
+    >
+      <img
+        alt="swap process chart sort"
+        src="/imgs/changeProcessChart_white.svg"
+        height="20px"
+        width="20px"
+      />
+    </button>
+    {#if processDisplayCpu === true}
+      <h2 class="chartTitle">Processes by CPU use</h2>
+      <Processes {metrics} cpuMem="cpu" />
+    {:else}
+      <h2 class="chartTitle">Processes by MEM use</h2>
+      <Processes {metrics} cpuMem="mem" />
+    {/if}
   </div>
 </section>
 
-<style>
+<style lang="scss">
+  #swapProcesses {
+    cursor: pointer;
+    background-color: unset;
+    position: absolute;
+    right: -0.5em;
+    top: -0.5em;
+    z-index: 4;
+    margin: 20px;
+    padding: 0;
+    min-width: unset;
+    border: unset;
+    img {
+      cursor: pointer;
+      padding: 0.5em;
+    }
+  }
+  #swapProcesses :hover {
+    border: var(--hostname-color) solid 2px;
+    border-radius: 0.5em;
+  }
   #chartTimeScaleButtons {
     display: flex;
     flex-direction: row;
@@ -107,6 +145,7 @@
     gap: 1.5em;
     justify-content: center;
   }
+
   .chartTitle {
     font-size: 0.8em;
     text-align: center;
@@ -122,6 +161,7 @@
   div.left,
   div.right {
     flex: 1 1;
+    text-align: center;
   }
   div.left {
     display: flex;
