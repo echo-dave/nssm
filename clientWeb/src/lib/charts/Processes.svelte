@@ -6,6 +6,11 @@
   ChartJS.register(Title, Tooltip, Legend, BarElement)
   ChartJS.defaults.font.family = "'Montserrat-light'"
   ChartJS.defaults.font.weight = 'normal'
+  // Set the postion of the tooltop so it isn't at the top of bars
+  Tooltip.positioners.toolTipPositioner = function (elements, eventPosition) {
+    return { x: eventPosition.x, y: eventPosition.y }
+  }
+
   export let metrics
   export let cpuMem
   let chartData
