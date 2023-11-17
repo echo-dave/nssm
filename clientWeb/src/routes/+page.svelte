@@ -84,11 +84,7 @@
     <MemData {metrics} />
   </div>
   <div class="chart-processes">
-    <button
-      id="swapProcesses"
-      class="no-border"
-      on:click={() => (processDisplayCpu = !processDisplayCpu)}
-    >
+    <button id="swapProcesses" on:click={() => (processDisplayCpu = !processDisplayCpu)}>
       <img
         alt="swap process chart sort"
         src="/imgs/changeProcessChart_white.svg"
@@ -109,7 +105,7 @@
 <style lang="scss">
   #swapProcesses {
     cursor: pointer;
-    background-color: unset;
+    background: rgba(51, 51, 51);
     position: absolute;
     right: -0.5em;
     top: -0.5em;
@@ -117,16 +113,26 @@
     margin: 20px;
     padding: 0;
     min-width: unset;
-    border: unset;
+    border: solid 1px;
+    border-radius: 0.5em;
+    border-top: solid 0.5px #b4b3b3;
+    border-left: solid 0.5px #b4b3b3;
+    border-bottom: solid 1px #333;
+    border-right: solid 1px #333;
+    width: 35px;
+    height: 35px;
     img {
       cursor: pointer;
       padding: 0.5em;
+      // pointer-events: none;
     }
   }
-  #swapProcesses :hover {
-    border: var(--hostname-color) solid 2px;
-    border-radius: 0.5em;
+
+  #swapProcesses:active {
+    background: linear-gradient(0deg, rgba(150, 150, 150, 0.5), 10%, rgba(51, 51, 51, 0.5));
+    color: black;
   }
+
   #chartTimeScaleButtons {
     display: flex;
     flex-direction: row;
@@ -169,6 +175,12 @@
     align-items: center;
   }
 
+  @media (hover: hover) {
+    #swapProcesses:hover {
+      border: var(--hostname-color) solid 1px;
+      border-radius: 0.5em;
+    }
+  }
   @media screen and (max-width: 720px) {
     #chartTimeScaleButtons {
       flex-direction: column;
