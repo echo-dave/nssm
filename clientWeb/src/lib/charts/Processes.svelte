@@ -46,7 +46,6 @@
               parsing: { xAxisKey: 'process', yAxisKey: cpuMem },
 
               data: metrics?.at(-1)?.processes[cpuMem]
-              // data: metrics?.at(-1)?.processes.cpu.map((x) => x.cpu)
             }
           ]
         })

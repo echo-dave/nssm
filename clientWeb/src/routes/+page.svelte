@@ -9,8 +9,6 @@
   import TimeScaleButton from './TimeScaleButton.svelte'
 
   const socket = io()
-  // import { background } from '../store'
-
   let metrics
   let minutes = 10
   let time = [0.5, 15, 60]
@@ -23,13 +21,10 @@
       newData.time = new Date(newData.time)
       metrics = [...metrics, newData]
       if (metrics.length > minutes * 30) metrics.shift()
-      // console.log('io length: ', metrics.length)
     })
   })
 
   const changeDataLength = () => {
-    // console.log('update length')
-    // console.log('minutes: ', minutes)
     let dataPointsCount = minutes * 30
     if (metrics.length > dataPointsCount) {
       metrics = metrics.slice(-dataPointsCount)
@@ -37,13 +32,10 @@
     if (dataPointsCount > metrics.length) {
       updateDataPoints(dataPointsCount)
     }
-    // console.log(metrics.length, 'count', dataPointsCount)
   }
   const updateDataPoints = async (count) => {
-    // console.log('update points')
     try {
       if (count > metrics.length + 1) {
-        // console.log('updating metrics')
         let res = await fetch(`/api/tsClientData/count/${count}`)
         if (!res.ok) {
           throw new Error({ error: res, msg: 'Failed to get client data' })
@@ -59,11 +51,12 @@
       console.warn(e)
     }
   }
-
-  // changeDataLength(minutes)
 </script>
 
-<svelte:head><title>Simple System Monitor</title></svelte:head>
+<svelte:head>
+  <title>Simple System Monitor</title>
+  <meta name="description" content="Nodesysmon a simple system monitor" />
+</svelte:head>
 
 <Header {metrics} />
 
@@ -124,7 +117,6 @@
     img {
       cursor: pointer;
       padding: 0.5em;
-      // pointer-events: none;
     }
   }
 
@@ -139,7 +131,6 @@
     justify-content: space-around;
   }
   #lineCharInfo {
-    /* text-align: center; */
     margin-top: 0;
     flex: 0 0;
     font-size: 1.2em;
