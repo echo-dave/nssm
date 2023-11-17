@@ -125,7 +125,6 @@
     e.target != document.querySelector('.hostname')
       ? (hostmenutoggle = false)
       : null
-    console.log('click')
   }}
 />
 
