@@ -31,7 +31,4 @@
 >
 
 <style>
-  button.timeSelection {
-    background-color: var(--buttonBackgroundColor);
-  }
 </style>

@@ -12,6 +12,7 @@
 }
 
 :root {
+    --hostname-color: rgb(171, 255, 46);
     --header-font-family: IBMPlexMono-Light, "Courier New", Courier, monospace;
     --textColor: rgb(250, 250, 250);
     --borderColor: rgb(17, 217, 217);
@@ -54,33 +55,27 @@ canvas {
 }
 .chart-container {
     display: flex;
-    /* align-items: center; */
-    /* justify-content: space-around; */
+
     box-sizing: border-box;
-    // width: 48vw;
     flex-direction: column;
     align-content: start;
 }
 .chart-container,
 .chart-processes {
-    // max-width: 48vw;
     max-width: 100%;
     height: 500px;
     flex: 1 1;
     overflow: hidden;
     position: relative;
+    border: none;
 }
 .chart-processes canvas,
 .chart-container canvas {
     letter-spacing: normal;
 }
-// .chart-processes {
-//     // display: flex;
-//     // height: 500px;
-// }
+
 .inner-chart-container,
 .chart-processes {
-    /* width: 100%; */
     margin-bottom: 1em;
     box-sizing: border-box;
 }
@@ -92,14 +87,42 @@ canvas {
 .hostname {
     font-size: 1.25em;
     font-weight: 800;
-    color: rgb(171, 255, 46);
+}
+
+#time-buttons {
+    button {
+        border-radius: 0.5em;
+        padding: 2px 4px;
+        min-width: 4em;
+        height: 2.4em;
+        margin: 1em 0.25em;
+        cursor: pointer;
+        background-color: #333;
+        color: white;
+        border-top: #b4b3b3 0.25px solid;
+        border-left: #b4b3b3 0.25px solid;
+        border-bottom: solid 1px black;
+        border-right: solid 1px black;
+    }
+
+    button.timeSelection {
+        background-color: var(--buttonBackgroundColor);
+        color: black;
+    }
+
+    button:active {
+        background: linear-gradient(0deg, rgba(150, 150, 150, 0.5), 10%, rgba(51, 51, 51, 0.5));
+        color: whitesmoke;
+    }
 }
 
 button {
-    border-radius: 0.5em;
-    padding: 2px 4px;
-    min-width: 4em;
-    height: 2.4em;
-    background-color: whitesmoke;
-    margin: 1em 0.25em;
+    text-transform: none !important;
+}
+
+@media (hover: hover) {
+    #time-buttons button:hover {
+        border: var(--hostname-color) 2px solid;
+        border-radius: 0.5em;
+    }
 }

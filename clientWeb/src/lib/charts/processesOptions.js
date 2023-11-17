@@ -28,7 +28,7 @@ const options = {
   },
   layout: {
     padding: {
-      top: 30
+      top: 50
     }
   },
   plugins: {
@@ -41,6 +41,7 @@ const options = {
       }
     },
     tooltip: {
+      position: 'toolTipPositioner',
       callbacks: {
         footer: (context) => {
           const itemOobject = context[context[0].datasetIndex].dataset.data[context[0].dataIndex]
