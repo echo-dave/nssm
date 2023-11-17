@@ -28,7 +28,9 @@ const options = {
   },
   layout: {
     padding: {
-      top: 50
+      top: 50,
+      left: 20,
+      right: 20
     }
   },
   plugins: {

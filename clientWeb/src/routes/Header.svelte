@@ -72,14 +72,14 @@
   <div class="no-border" style="flex: 1 1;">
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <span
+    <button
       class="hostname"
       on:click={() => {
         hostmenutoggle = !hostmenutoggle
-      }}>{metrics?.at(-1)?.meta.hostname}</span
+      }}>{metrics?.at(-1)?.meta.hostname}</button
     >
     {#if true}
-      <ul id="hostnames" style="visibility: {visibilityToggle}">
+      <ul id="hostnames" class:fade-in={hostmenutoggle} style="visibility: {visibilityToggle}">
         {#await hostnames then hostnames}
           {#each hostnames as name}
             <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -136,11 +136,15 @@
     gap: 3.5em;
   }
   .hostname {
+    font-size: 1.25em;
     margin-left: 1em;
     padding-top: 0.5em;
     display: inline-block;
     cursor: pointer;
     color: var(--hostname-color);
+    background: none;
+    border: none;
+    text-transform: none;
   }
   #hostnames {
     position: absolute;
@@ -157,6 +161,7 @@
 
   #hostnames li:hover {
     color: aqua;
+    margin-left: -1.4em;
   }
   #hostnames li:hover::before {
     content: '•';
@@ -196,6 +201,16 @@
     margin-top: calc(50% - 0.5em);
     font-size: 0.7em;
     margin-left: 0.5em;
+  }
+  .fade-in {
+    opacity: 0;
+    animation: fade-in 0.25s ease-in forwards;
+  }
+
+  @keyframes fade-in {
+    100% {
+      opacity: 1;
+    }
   }
 
   @media screen and (max-width: 720px) {
