@@ -3,7 +3,7 @@
   import { Chart as ChartJS, Title, Tooltip, Legend, BarElement } from 'chart.js'
   import options from '$lib/charts/processesOptions.js'
   ChartJS.register(Title, Tooltip, Legend, BarElement)
-  ChartJS.defaults.font.family = "'Montserrat-light'"
+  ChartJS.defaults.font.family = 'Montserrat-Light'
   ChartJS.defaults.font.weight = 'normal'
   // Set the postion of the tooltop so it isn't at the top of bars
   Tooltip.positioners.toolTipPositioner = function (elements, eventPosition) {
