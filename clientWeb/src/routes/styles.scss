@@ -4,6 +4,7 @@
     font-style: normal;
     font-display: swap;
 }
+
 @font-face {
     font-family: "Montserrat-Light";
     src: url(/fonts/Montserrat-Light.ttf);
@@ -58,13 +59,14 @@ canvas {
     padding: 0.25em;
     box-sizing: content-box;
 }
+
 .chart-container {
     display: flex;
-
     box-sizing: border-box;
     flex-direction: column;
     align-content: start;
 }
+
 .chart-container,
 .chart-processes {
     max-width: 100%;
@@ -74,6 +76,7 @@ canvas {
     position: relative;
     border: none;
 }
+
 .chart-processes canvas,
 .chart-container canvas {
     letter-spacing: normal;
@@ -105,6 +108,10 @@ canvas {
         border-right: solid 1px black;
     }
 
+    button {
+        text-transform: none !important;
+    }
+
     button.timeSelection {
         background-color: var(--buttonBackgroundColor);
         color: black;
@@ -114,10 +121,6 @@ canvas {
         background: linear-gradient(0deg, rgba(150, 150, 150, 0.5), 10%, rgba(51, 51, 51, 0.5));
         color: whitesmoke;
     }
-}
-
-button {
-    text-transform: none !important;
 }
 
 @media (hover: hover) {
