@@ -8,6 +8,7 @@ import { telemetry } from './utils/dbcon.js'
 import { hostname } from 'node:os'
 import getHostnames from './api/getHostnames.js'
 import chalk from 'chalk'
+import getWebData from './api/getWebData.js'
 import { getAvgMem } from './api/getAvgMem.js'
 
 export default async (thresholds, isHeadless) => {
@@ -19,11 +20,22 @@ export default async (thresholds, isHeadless) => {
 
   io.on('connection', (socket) => {
     console.log('a user connected')
+
+    socket.on('subscribe', (serverHostName) => {
+      socket.join(serverHostName)
+      console.log('join')
+    })
+    socket.on('unsubscribe', (serverHostName) => {
+      console.log('unsubServer:', serverHostName)
+      socket.leave(serverHostName, (err) => {
+        console.log({ error: err, msg: 'error unsubscribing socket' })
+      })
+    })
     socket.on('disconnect', () => {
       console.log('user disconnected')
     })
   })
-  const serverName = hostname()
+  const serverName = hostname().replace(/(.local)$/, '')
 
   app.get('/api/gethostnames', async (req, res) => {
     try {
@@ -53,23 +65,28 @@ export default async (thresholds, isHeadless) => {
   })
 
   app.get('/api/tsClientData/count/:count', async (req, res) => {
-    try {
-      let changeData = await telemetry
-        .find({ 'meta.hostname': serverName })
-        .sort({ time: -1 })
-        .limit(parseInt(req.params.count))
-        .toArray()
-      res.json(changeData)
-    } catch (e) {
-      console.error({
-        error: e,
-        msg: 'Not able to udpate metrics array length',
-      })
-    }
+    const data = await getHistory(req.params.count, serverName)
+    res.status(200).json(data)
+
+    // try {
+    //   let changeData = await telemetry
+    //     .find({ 'meta.hostname': serverName })
+    //     .sort({ time: -1 })
+    //     .limit(parseInt(req.params.count))
+    //     .toArray()
+    //   res.json(changeData)
+    // } catch (e) {
+    //   console.error({
+    //     error: e,
+    //     msg: 'Not able to udpate metrics array length',
+    //   })
+    // }
   })
 
   app.get('/api/serverchange/:host', async (req, res) => {
-    res.status(200).json(req.params.host)
+    const data = await getHistory(300, req.params.host)
+    if (req.params.host !== serverName) getWebData(req.params.host, io)
+    res.status(200).json(data)
   })
 
   getTelemetry(thresholds, true, io)
@@ -85,4 +102,19 @@ export default async (thresholds, isHeadless) => {
     console.log(chalk.yellowBright.bgBlack(`cpu=${thresholds.cpuThreshold}`))
   })
   // getAvgMem(22)
+}
+
+async function getHistory(count, serverName) {
+  try {
+    return await telemetry
+      .find({ 'meta.hostname': serverName })
+      .sort({ time: -1 })
+      .limit(parseInt(count))
+      .toArray()
+  } catch (e) {
+    console.error({
+      error: e,
+      msg: 'Not able to udpate metrics array length',
+    })
+  }
 }

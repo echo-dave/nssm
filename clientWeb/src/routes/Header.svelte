@@ -3,6 +3,8 @@
   import { onMount } from 'svelte'
 
   export let metrics
+  export let subscribe
+  export let unsubscribe
   let hostmenutoggle = false
   let currentHost
   //storing a pending promise because svelt needs to await data from the onMount
@@ -25,20 +27,37 @@
   }
 
   const changeServer = async (name) => {
-    console.log(name)
+    console.log('changeTo: ', name)
+    unsubscribe(currentHost)
+    console.log('unsub: ', currentHost)
+    subscribe(name)
     let resp = await fetch(`/api/serverchange/${name}`)
+    if (!resp.ok) throw new Error(resp.status)
     resp = await resp.json()
-    console.log(resp)
+    resp.map((el) => {
+      el.time = new Date(el.time)
+    })
+    currentHost = name
+    metrics = resp.reverse()
+    // metrics = resp
   }
-  $: currentTime = metrics?.at(-1)?.time.toLocaleString('default', {
-    year: 'numeric',
-    month: 'short',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false
-  })
+  const formatTime = (metrics) => {
+    try {
+      return metrics?.at(-1)?.time.toLocaleString('default', {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      })
+    } catch (e) {
+      console.warn('waiting for time data')
+    }
+  }
+  $: currentTime = formatTime(metrics)
+
   let buildChart
   async function build(metrics) {
     buildChart = new Promise(async (res, rej) => {
