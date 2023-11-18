@@ -1,5 +1,4 @@
 <script>
-  import { browser } from '$app/environment'
   import { Bar } from 'svelte-chartjs'
   import { Chart as ChartJS, Title, Tooltip, Legend, BarElement } from 'chart.js'
   import options from '$lib/charts/processesOptions.js'
@@ -60,10 +59,3 @@
 {#await metrics && chartData then}
   <Bar data={chartData} {options} />
 {/await}
-
-<style>
-  @font-face {
-    font-family: 'Montserrat-light';
-    src: url('$lib/fonts/Montserrat-light.ttf');
-  }
-</style>
