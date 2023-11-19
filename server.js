@@ -24,13 +24,19 @@ export default async (thresholds) => {
     socket.on('subscribe', (serverHostName) => {
       socket.join(serverHostName)
       console.log('join:', serverHostName)
-      serverHostName = serverHostName.filter((el) => el !== serverName)
-      serverHostName.forEach((hostJoining) => {
-        if (!monitoringState[hostJoining] || monitoringState[hostJoining] < 1) {
-          console.log('rejoin')
-          getWebData(hostJoining, io)
-        }
-      })
+      if (Array.isArray(serverHostName)) {
+        console.log('is array')
+        serverHostName = serverHostName.filter((el) => el !== serverName)
+        serverHostName.forEach((hostJoining) => {
+          if (
+            !monitoringState[hostJoining] ||
+            monitoringState[hostJoining] < 1
+          ) {
+            console.log('rejoin')
+            getWebData(hostJoining, io)
+          }
+        })
+      }
     })
     socket.on('unsubscribe', (serverHostName) => {
       console.log('unsubServer:', serverHostName)
