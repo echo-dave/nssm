@@ -13,10 +13,15 @@ const getWebData = (hostname, io) => {
       .to(hostname)
       .emit('dataB', next.fullDocument, (err, response) => {
         if (err) {
+          monitoringState[hostname] -= 1
           console.warn(err)
-        } else if (response[0] === 'ok') {
+        }
+        if (response[0] === 'ok') {
           console.log('webData Response', response)
           dataLoop()
+          if (monitoringState[hostname] !== response.length) {
+            monitoringState[hostname] = response.length
+          }
         }
       })
   }

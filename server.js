@@ -11,20 +11,35 @@ import chalk from 'chalk'
 import getWebData from './api/getWebData.js'
 import { getAvgMem } from './api/getAvgMem.js'
 
-export default async (thresholds, isHeadless) => {
+export default async (thresholds) => {
   const app = express()
   const httpServer = createServer(app)
   const io = new Server(httpServer)
 
   const PORT = process.env.PORT || 3006
+  global.monitoringState = {}
+  const serverName = hostname().replace(/(.local)$/, '')
 
   io.on('connection', (socket) => {
     socket.on('subscribe', (serverHostName) => {
       socket.join(serverHostName)
       console.log('join:', serverHostName)
+      if (Array.isArray(serverHostName)) {
+        serverHostName = serverHostName.filter((el) => el !== serverName)
+        serverHostName.forEach((hostJoining) => {
+          if (
+            !monitoringState[hostJoining] ||
+            monitoringState[hostJoining] < 1
+          ) {
+            console.log('rejoin')
+            getWebData(hostJoining, io)
+          }
+        })
+      }
     })
     socket.on('unsubscribe', (serverHostName) => {
       console.log('unsubServer:', serverHostName)
+      monitoringState[serverHostName] -= 1
       socket.leave(serverHostName, (err) => {
         console.error({ error: err, msg: 'error unsubscribing socket' })
       })
@@ -33,7 +48,6 @@ export default async (thresholds, isHeadless) => {
       console.log('user disconnected')
     })
   })
-  const serverName = hostname().replace(/(.local)$/, '')
 
   app.get('/api/gethostnames', async (req, res) => {
     try {
@@ -69,7 +83,19 @@ export default async (thresholds, isHeadless) => {
 
   app.get('/api/serverchange/:host', async (req, res) => {
     const data = await getHistory(300, req.params.host)
-    if (req.params.host !== serverName) getWebData(req.params.host, io)
+    if (monitoringState[req.params.host]) {
+      monitoringState[req.params.host] += 1
+      console.log('change: ', monitoringState)
+    } else monitoringState[req.params.host] = 1
+
+    if (
+      monitoringState[req.params.host] === 1 &&
+      req.params.host !== serverName
+    ) {
+      getWebData(req.params.host, io)
+    }
+    console.log('change else: ', monitoringState)
+
     res.status(200).json(data)
   })
 

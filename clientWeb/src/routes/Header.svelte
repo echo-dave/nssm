@@ -105,7 +105,7 @@
             <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
             <li
               on:click={(e) => {
-                changeServer(name)
+                if (name !== currentHost) changeServer(name)
                 hostmenutoggle = false
               }}
             >

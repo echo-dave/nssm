@@ -1,6 +1,6 @@
 {
   "name": "nodesysmon",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Node simple system monitoring",
   "main": "nodesysmon.js",
   "engines": {
