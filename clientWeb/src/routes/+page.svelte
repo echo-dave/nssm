@@ -47,13 +47,13 @@
     socket.on('dataA', (inData, ack) => {
       hostData(inData)
       ack('ok')
-      console.log('web data - creative')
+      console.log('Telemtry data')
     })
 
     socket.on('dataB', (inData, ack) => {
       hostData(inData)
       ack('ok')
-      console.log('telemetry')
+      console.log('web data - creative')
     })
 
     // socket.onAny((event, ...args) => {
@@ -202,6 +202,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-bottom: 0.75em;
   }
   #wrap {
     max-width: 1500px;
@@ -220,11 +221,12 @@
     }
     .left {
       text-align: center;
-      margin-bottom: 0.5em;
       margin-top: 0.5em;
+      padding-bottom: 0;
     }
     #main-charts {
       flex-direction: column;
+      gap: 0.75em;
     }
     .chart-container,
     .chart-processes {
@@ -234,7 +236,7 @@
     }
     .chart-container {
       height: unset;
-      margin-top: 1.5em;
+      margin-top: 0.5em;
     }
   }
 </style>

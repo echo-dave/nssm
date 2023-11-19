@@ -56,6 +56,7 @@ canvas {
 }
 
 button {
+    font-size: 0.75em;
     letter-spacing: 0.1em;
     font-family: var(--font-main);
     text-transform: none;
@@ -93,6 +94,8 @@ button {
 }
 
 #time-buttons {
+    margin-top: 0.25em;
+    height: 3.5em;
     button {
         border-radius: 0.5em;
         padding: 2px 4px;
@@ -106,6 +109,8 @@ button {
         border-left: #b4b3b3 0.25px solid;
         border-bottom: solid 1px black;
         border-right: solid 1px black;
+        position: relative;
+        box-sizing: border-box;
     }
 
     button.timeSelection {
@@ -123,5 +128,10 @@ button {
     #time-buttons button:hover {
         border: var(--hostname-color) 1px solid;
         border-radius: 0.5em;
+    }
+    @media screen and (max-width: 720px) {
+        #chartTimeScaleButtons {
+            // padding: 0.5em;
+        }
     }
 }
