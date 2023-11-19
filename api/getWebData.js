@@ -7,13 +7,11 @@ const getWebData = (hostname, io) => {
     fullDocument: 'updateLookup',
   })
   const dataLoop = async () => {
-    console.log('datalooop: ', hostname)
     await changeStream.hasNext()
     const next = await changeStream.next()
     io.timeout(2000)
       .to(hostname)
       .emit('dataB', next.fullDocument, (err, response) => {
-        console.log('data:', response)
         if (err) {
           monitoringState[hostname] -= 1
           console.warn(err)

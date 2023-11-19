@@ -25,7 +25,6 @@ export default async (thresholds) => {
       socket.join(serverHostName)
       console.log('join:', serverHostName)
       if (Array.isArray(serverHostName)) {
-        console.log('is array')
         serverHostName = serverHostName.filter((el) => el !== serverName)
         serverHostName.forEach((hostJoining) => {
           if (
