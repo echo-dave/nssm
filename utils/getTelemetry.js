@@ -169,7 +169,6 @@ Time:\t\t ${chalk.magenta(time)}
             console.log({ error: err, msg: 'telemetry data socket error' })
           if (response[0] === 'ok')
             console.log('response to telemetry', response)
-          // if (response) console.log('res', response)
         })
     }
   }, 2000)

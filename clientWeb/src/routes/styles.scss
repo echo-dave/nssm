@@ -43,11 +43,6 @@ body {
     }
 }
 
-button {
-    letter-spacing: 0.1em;
-    font-family: var(--font-main);
-}
-
 div,
 canvas {
     border-radius: 1em;
@@ -60,6 +55,11 @@ canvas {
     box-sizing: content-box;
 }
 
+button {
+    letter-spacing: 0.1em;
+    font-family: var(--font-main);
+    text-transform: none;
+}
 .chart-container {
     display: flex;
     box-sizing: border-box;
@@ -106,10 +106,6 @@ canvas {
         border-left: #b4b3b3 0.25px solid;
         border-bottom: solid 1px black;
         border-right: solid 1px black;
-    }
-
-    button {
-        text-transform: none !important;
     }
 
     button.timeSelection {

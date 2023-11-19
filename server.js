@@ -19,16 +19,14 @@ export default async (thresholds, isHeadless) => {
   const PORT = process.env.PORT || 3006
 
   io.on('connection', (socket) => {
-    console.log('a user connected')
-
     socket.on('subscribe', (serverHostName) => {
       socket.join(serverHostName)
-      console.log('join')
+      console.log('join:', serverHostName)
     })
     socket.on('unsubscribe', (serverHostName) => {
       console.log('unsubServer:', serverHostName)
       socket.leave(serverHostName, (err) => {
-        console.log({ error: err, msg: 'error unsubscribing socket' })
+        console.error({ error: err, msg: 'error unsubscribing socket' })
       })
     })
     socket.on('disconnect', () => {
@@ -67,20 +65,6 @@ export default async (thresholds, isHeadless) => {
   app.get('/api/tsClientData/count/:count', async (req, res) => {
     const data = await getHistory(req.params.count, serverName)
     res.status(200).json(data)
-
-    // try {
-    //   let changeData = await telemetry
-    //     .find({ 'meta.hostname': serverName })
-    //     .sort({ time: -1 })
-    //     .limit(parseInt(req.params.count))
-    //     .toArray()
-    //   res.json(changeData)
-    // } catch (e) {
-    //   console.error({
-    //     error: e,
-    //     msg: 'Not able to udpate metrics array length',
-    //   })
-    // }
   })
 
   app.get('/api/serverchange/:host', async (req, res) => {
