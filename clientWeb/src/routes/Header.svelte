@@ -88,7 +88,7 @@
 </script>
 
 <div id="liveSysData">
-  <div class="no-border" style="flex: 1 1;">
+  <div class="no-border" style="flex: 1 1;position:relative">
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <button
@@ -172,7 +172,7 @@
     padding: 0.5em 2.5em;
     border-radius: 0.5em;
     left: 1.5em;
-    top: 3em;
+    top: 1.25em;
     cursor: pointer;
     visibility: visible;
     display: inline-block;
