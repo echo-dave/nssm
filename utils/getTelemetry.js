@@ -161,7 +161,15 @@ Time:\t\t ${chalk.magenta(time)}
       // console.dir(report, { depth: null, colors: true })
       // console.log(report)
       sendData(report)
-      io.emit('new data', report)
+      // console.log(report)
+      io.timeout(1000)
+        .to(report.meta.hostname)
+        .emit('dataA', report, (err, response) => {
+          if (err)
+            console.log({ error: err, msg: 'telemetry data socket error' })
+          if (response[0] === 'ok')
+            console.log('response to telemetry', response)
+        })
     }
   }, 2000)
 }

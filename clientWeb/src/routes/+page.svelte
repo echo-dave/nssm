@@ -5,23 +5,60 @@
   import { io } from 'socket.io-client'
   import CpuData from '$lib/charts/CpuData.svelte'
   import MemData from '$lib/charts/MemData.svelte'
-  import Processes from '$lib/charts/Processes.Svelte'
   import TimeScaleButton from './TimeScaleButton.svelte'
+  import Processes from '../lib/charts/Processes.svelte'
 
   const socket = io()
   let metrics
   let minutes = 10
   let time = [0.5, 15, 60]
-  let hostnames
+  let hostname
   let processDisplayCpu = true
+  const ioSubscriptions = new Set()
   export let data
+  const subscribe = (hostname) => {
+    console.log('subscribe to:', hostname)
+    ioSubscriptions.add(hostname)
+    if (socket.connected) socket.emit('subscribe', hostname)
+  }
+  const unsubscribe = (hostname) => {
+    console.log('host to delete', hostname)
+    const deleted = ioSubscriptions.delete(hostname)
+    console.log('deleted: ', deleted)
+    if (deleted && socket.connected) socket.emit('unsubscribe', hostname)
+  }
+  const hostData = (newData) => {
+    newData.time = new Date(newData.time)
+    metrics = [...metrics, newData]
+    if (metrics.length > minutes * 30) metrics.shift()
+  }
+
   onMount(async () => {
     metrics = data.metrics
-    socket.on('new data', (newData) => {
-      newData.time = new Date(newData.time)
-      metrics = [...metrics, newData]
-      if (metrics.length > minutes * 30) metrics.shift()
+    hostname = metrics[0].meta.hostname
+    subscribe(hostname)
+
+    socket.on('connect', () => {
+      console.log('connect Subscribe', ioSubscriptions)
+      if (ioSubscriptions.size) socket.emit('subscribe', [...ioSubscriptions])
+      else subscribe(hostname)
     })
+    // does this work?
+    socket.on('dataA', (inData, ack) => {
+      hostData(inData)
+      ack('ok')
+      console.log('Telemtry data')
+    })
+
+    socket.on('dataB', (inData, ack) => {
+      hostData(inData)
+      ack('ok')
+      console.log('web data - creative')
+    })
+
+    // socket.onAny((event, ...args) => {
+    //   console.log('any', event, args)
+    // })
   })
 
   const changeDataLength = () => {
@@ -57,43 +94,44 @@
   <title>Simple System Monitor</title>
   <meta name="description" content="Nodesysmon a simple system monitor" />
 </svelte:head>
+<div id="wrap" class="no-border">
+  <Header bind:metrics {subscribe} {unsubscribe} />
 
-<Header {metrics} />
-
-<div id="chartTimeScaleButtons" class="no-border">
-  <div class="left no-border">
-    <div id="time-buttons" class="no-border">
-      {#each time as timeElement}
-        <TimeScaleButton bind:minutes time={timeElement} {changeDataLength} />
-      {/each}
+  <div id="chartTimeScaleButtons" class="no-border">
+    <div class="left no-border">
+      <div id="time-buttons" class="no-border">
+        {#each time as timeElement}
+          <TimeScaleButton bind:minutes time={timeElement} {changeDataLength} />
+        {/each}
+      </div>
+      <span id="lineCharInfo">History for the last {minutes} minutes</span>
     </div>
-    <span id="lineCharInfo">History for the last {minutes} minutes</span>
+    <div class="right no-border"></div>
   </div>
-  <div class="right no-border"></div>
+  <section id="main-charts">
+    <div class="chart-container no-border">
+      <CpuData {metrics} />
+      <MemData {metrics} />
+    </div>
+    <div class="chart-processes">
+      <button id="swapProcesses" on:click={() => (processDisplayCpu = !processDisplayCpu)}>
+        <img
+          alt="swap process chart sort"
+          src="/imgs/changeProcessChart_white.svg"
+          height="20px"
+          width="20px"
+        />
+      </button>
+      {#if processDisplayCpu === true}
+        <h2 class="chartTitle">Processes by CPU use</h2>
+        <Processes {metrics} cpuMem="cpu" />
+      {:else}
+        <h2 class="chartTitle">Processes by MEM use</h2>
+        <Processes {metrics} cpuMem="mem" />
+      {/if}
+    </div>
+  </section>
 </div>
-<section id="main-charts">
-  <div class="chart-container no-border">
-    <CpuData {metrics} />
-    <MemData {metrics} />
-  </div>
-  <div class="chart-processes">
-    <button id="swapProcesses" on:click={() => (processDisplayCpu = !processDisplayCpu)}>
-      <img
-        alt="swap process chart sort"
-        src="/imgs/changeProcessChart_white.svg"
-        height="20px"
-        width="20px"
-      />
-    </button>
-    {#if processDisplayCpu === true}
-      <h2 class="chartTitle">Processes by CPU use</h2>
-      <Processes {metrics} cpuMem="cpu" />
-    {:else}
-      <h2 class="chartTitle">Processes by MEM use</h2>
-      <Processes {metrics} cpuMem="mem" />
-    {/if}
-  </div>
-</section>
 
 <style lang="scss">
   #swapProcesses {
@@ -164,8 +202,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-bottom: 0.75em;
   }
-
+  #wrap {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 0;
+  }
   @media (hover: hover) {
     #swapProcesses:hover {
       border: var(--hostname-color) solid 1px;
@@ -178,16 +221,22 @@
     }
     .left {
       text-align: center;
-      margin-bottom: 0.5em;
       margin-top: 0.5em;
+      padding-bottom: 0;
     }
     #main-charts {
       flex-direction: column;
+      gap: 0.75em;
     }
     .chart-container,
     .chart-processes {
       width: calc(95vw - 0.7em);
       justify-content: center;
+      flex: unset;
+    }
+    .chart-container {
+      height: unset;
+      margin-top: 0.5em;
     }
   }
 </style>

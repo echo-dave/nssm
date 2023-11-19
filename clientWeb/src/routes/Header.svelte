@@ -3,6 +3,8 @@
   import { onMount } from 'svelte'
 
   export let metrics
+  export let subscribe
+  export let unsubscribe
   let hostmenutoggle = false
   let currentHost
   //storing a pending promise because svelt needs to await data from the onMount
@@ -25,20 +27,37 @@
   }
 
   const changeServer = async (name) => {
-    console.log(name)
+    console.log('changeTo: ', name)
+    unsubscribe(currentHost)
+    console.log('unsub: ', currentHost)
+    subscribe(name)
     let resp = await fetch(`/api/serverchange/${name}`)
+    if (!resp.ok) throw new Error(resp.status)
     resp = await resp.json()
-    console.log(resp)
+    resp.map((el) => {
+      el.time = new Date(el.time)
+    })
+    currentHost = name
+    metrics = resp.reverse()
+    // metrics = resp
   }
-  $: currentTime = metrics?.at(-1)?.time.toLocaleString('default', {
-    year: 'numeric',
-    month: 'short',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false
-  })
+  const formatTime = (metrics) => {
+    try {
+      return metrics?.at(-1)?.time.toLocaleString('default', {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      })
+    } catch (e) {
+      console.warn('waiting for time data')
+    }
+  }
+  $: currentTime = formatTime(metrics)
+
   let buildChart
   async function build(metrics) {
     buildChart = new Promise(async (res, rej) => {
@@ -69,17 +88,17 @@
 </script>
 
 <div id="liveSysData">
-  <div class="no-border" style="flex: 1 1;">
+  <div class="no-border" style="flex: 1 1;position:relative">
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <span
+    <button
       class="hostname"
       on:click={() => {
         hostmenutoggle = !hostmenutoggle
-      }}>{metrics?.at(-1)?.meta.hostname}</span
+      }}>{metrics?.at(-1)?.meta.hostname}</button
     >
     {#if true}
-      <ul id="hostnames" style="visibility: {visibilityToggle}">
+      <ul id="hostnames" class:fade-in={hostmenutoggle} style="visibility: {visibilityToggle}">
         {#await hostnames then hostnames}
           {#each hostnames as name}
             <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -125,7 +144,6 @@
     e.target != document.querySelector('.hostname')
       ? (hostmenutoggle = false)
       : null
-    console.log('click')
   }}
 />
 
@@ -137,11 +155,15 @@
     gap: 3.5em;
   }
   .hostname {
+    font-size: 1.25em;
     margin-left: 1em;
     padding-top: 0.5em;
     display: inline-block;
     cursor: pointer;
     color: var(--hostname-color);
+    background: none;
+    border: none;
+    text-transform: none;
   }
   #hostnames {
     position: absolute;
@@ -150,7 +172,7 @@
     padding: 0.5em 2.5em;
     border-radius: 0.5em;
     left: 1.5em;
-    top: 3em;
+    top: 1.25em;
     cursor: pointer;
     visibility: visible;
     display: inline-block;
@@ -158,6 +180,7 @@
 
   #hostnames li:hover {
     color: aqua;
+    margin-left: -1.4em;
   }
   #hostnames li:hover::before {
     content: '•';
@@ -197,6 +220,16 @@
     margin-top: calc(50% - 0.5em);
     font-size: 0.7em;
     margin-left: 0.5em;
+  }
+  .fade-in {
+    opacity: 0;
+    animation: fade-in 0.25s ease-in forwards;
+  }
+
+  @keyframes fade-in {
+    100% {
+      opacity: 1;
+    }
   }
 
   @media screen and (max-width: 720px) {
