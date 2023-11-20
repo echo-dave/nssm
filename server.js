@@ -81,8 +81,8 @@ export default async (thresholds) => {
     res.status(200).json(data)
   })
 
-  app.get('/api/serverchange/:host', async (req, res) => {
-    const data = await getHistory(300, req.params.host)
+  app.get('/api/serverchange/:host/:count', async (req, res) => {
+    const data = await getHistory(req.params.count, req.params.host)
     if (monitoringState[req.params.host]) {
       monitoringState[req.params.host] += 1
       console.log('change: ', monitoringState)

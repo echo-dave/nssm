@@ -22,7 +22,7 @@ const getWebData = (hostname, io) => {
           //   monitoringState[hostname] = response.length
           // }
         }
-        // if (response[0] !== 'ok') monitoringState[hostname] = 0
+        if (response[0] !== 'ok') monitoringState[hostname] = 0
       })
   }
   dataLoop()

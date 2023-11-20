@@ -95,13 +95,13 @@
   <meta name="description" content="Nodesysmon a simple system monitor" />
 </svelte:head>
 <div id="wrap" class="no-border">
-  <Header bind:metrics {subscribe} {unsubscribe} />
+  <Header bind:metrics bind:hostname {subscribe} {unsubscribe} {minutes} />
 
   <div id="chartTimeScaleButtons" class="no-border">
     <div class="left no-border">
       <div id="time-buttons" class="no-border">
         {#each time as timeElement}
-          <TimeScaleButton bind:minutes bind:hostname time={timeElement} {changeDataLength} />
+          <TimeScaleButton bind:minutes time={timeElement} {changeDataLength} />
         {/each}
       </div>
       <span id="lineCharInfo">History for the last {minutes} minutes</span>
