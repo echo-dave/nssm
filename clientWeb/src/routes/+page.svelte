@@ -14,6 +14,7 @@
   let time = [0.5, 15, 60]
   let hostname
   let processDisplayCpu = true
+  let barProcessDetail
   const ioSubscriptions = new Set()
   export let data
   const subscribe = (hostname) => {
@@ -47,13 +48,13 @@
     socket.on('dataA', (inData, ack) => {
       hostData(inData)
       ack('ok')
-      console.log('Telemtry data')
+      // console.log('Telemtry data')
     })
 
     socket.on('dataB', (inData, ack) => {
       hostData(inData)
       ack('ok')
-      console.log('web data - creative')
+      // console.log('web data - creative')
     })
 
     // socket.onAny((event, ...args) => {
@@ -106,7 +107,15 @@
       </div>
       <span id="lineCharInfo">History for the last {minutes} minutes</span>
     </div>
-    <div class="right no-border"></div>
+    <div class="right no-border">
+      {#if barProcessDetail}
+        <ul class="process-details">
+          {#each Object.entries(barProcessDetail) as [key, value]}
+            <li class="process-details">{key}: <span class="process-value">{value}</span></li>
+          {/each}
+        </ul>
+      {/if}
+    </div>
   </div>
   <section id="main-charts">
     <div class="chart-container no-border">
@@ -124,10 +133,10 @@
       </button>
       {#if processDisplayCpu === true}
         <h2 class="chartTitle">Processes by CPU use</h2>
-        <Processes {metrics} cpuMem="cpu" />
+        <Processes {metrics} cpuMem="cpu" bind:barProcessDetail />
       {:else}
         <h2 class="chartTitle">Processes by MEM use</h2>
-        <Processes {metrics} cpuMem="mem" />
+        <Processes {metrics} cpuMem="mem" bind:barProcessDetail />
       {/if}
     </div>
   </section>
@@ -196,14 +205,35 @@
   div.left,
   div.right {
     flex: 1 1;
-    text-align: center;
+    text-align: left;
+
+    li.process-details {
+      list-style: none;
+      font-size: 0.85em;
+      display: inline-block;
+      .process-value {
+        color: var(--process-details);
+      }
+    }
+
+    li::after {
+      content: '|';
+      padding: 0 1em;
+      color: var(--time-color);
+    }
+
+    li:last-child::after {
+      content: none;
+    }
   }
+
   div.left {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-bottom: 0.75em;
   }
+
   #wrap {
     max-width: 1500px;
     margin: 0 auto;

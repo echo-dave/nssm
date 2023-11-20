@@ -19,6 +19,8 @@
     --borderColor: rgb(17, 217, 217);
     --buttonBackgroundColor: rgb(17, 217, 217);
     --font-main: "Montserrat-Light", Verdana, Geneva, Tahoma, sans-serif;
+    --time-color: #fc2d87;
+    --process-details: #22ecec;
 }
 body {
     background-color: rgb(41, 41, 41);
@@ -129,8 +131,5 @@ button {
         border-radius: 0.5em;
     }
     @media screen and (max-width: 720px) {
-        #chartTimeScaleButtons {
-            // padding: 0.5em;
-        }
     }
 }

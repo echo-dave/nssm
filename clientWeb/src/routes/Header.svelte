@@ -136,7 +136,7 @@
     <li>
       Mem Reported: {metrics?.at(-1)?.totalMem}M
     </li>
-    <li style="color: magenta;">
+    <li class="time">
       {currentTime}
     </li>
   </ul>
@@ -180,7 +180,9 @@
     visibility: visible;
     display: inline-block;
   }
-
+  .time {
+    color: var(--time-color);
+  }
   #hostnames li:hover {
     color: aqua;
     margin-left: -1.4em;

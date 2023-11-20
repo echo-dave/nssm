@@ -1,10 +1,11 @@
 <script>
-  import { Bar } from 'svelte-chartjs'
-  import { Chart as ChartJS, Title, Tooltip, Legend, BarElement } from 'chart.js'
+  // import { Bar } from 'svelte-chartjs'
+  import { Chart, BarController, Title, Tooltip, Legend, BarElement } from 'chart.js'
   import options from '$lib/charts/processesOptions.js'
-  ChartJS.register(Title, Tooltip, Legend, BarElement)
-  ChartJS.defaults.font.family = 'Montserrat-Light'
-  ChartJS.defaults.font.weight = 'normal'
+  import { onMount } from 'svelte'
+  Chart.register(BarController, Title, Tooltip, Legend, BarElement)
+  Chart.defaults.font.family = 'Montserrat-Light'
+  Chart.defaults.font.weight = 'normal'
   // Set the postion of the tooltop so it isn't at the top of bars
   Tooltip.positioners.toolTipPositioner = function (elements, eventPosition) {
     return { x: eventPosition.x, y: eventPosition.y }
@@ -12,12 +13,26 @@
 
   export let metrics
   export let cpuMem
+  export let barProcessDetail
+
+  let myChart
+  let ctx
+  let myCanvas
   let chartData
   let skip = true
 
+  onMount(() => {
+    ctx = myCanvas.getContext('2d')
+    myChart = new Chart(ctx, {
+      type: 'bar',
+      data: chartData,
+      options: options
+    })
+  })
+
   async function updateData(metrics) {
     try {
-      chartData = await new Promise(async (res, rej) => {
+      return (chartData = await new Promise(async (res, rej) => {
         if (!metrics?.at(-1)?.processes?.[cpuMem]) {
           rej(new Error('No metrics data'))
         }
@@ -48,14 +63,47 @@
             }
           ]
         })
-      })
+      }))
     } catch (e) {
       console.warn(e)
     }
   }
-  $: if (metrics) updateData(metrics)
+  $: if (metrics) {
+    ;(async () => {
+      myChart.data = await updateData(metrics)
+      // console.log(myChart.data)
+
+      // console.log('are we updating?')
+      // myChart.destroy()
+      myChart.update()
+    })()
+  }
+
+  const getToolTipData = (evt) => {
+    const res = myChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true)
+    // console.log(res[0])
+    // If didn't click on a bar, `res` will be an empty array
+    if (res.length === 0) {
+      return
+    }
+    // Alerts "You clicked on A" if you click the "A" chart
+    // alert('You clicked on ' + myChart.data.labels[res[0].index])
+    barProcessDetail = myChart.data.datasets[res[0].datasetIndex].data[res[0].index]
+    // console.log(dataElement)
+    // for (const el in dataElement) {
+    //   alertstr += `${el}: ${dataElement[el]}\n`
+    // }
+    // console.log(alertstr)
+    // alert(alertstr)
+  }
 </script>
 
-{#await metrics && chartData then}
-  <Bar data={chartData} {options} />
-{/await}
+<!-- {#await metrics && chartData then} -->
+<!-- <Bar data={chartData} {options} /> -->
+<canvas
+  on:click={(e) => {
+    getToolTipData(e)
+  }}
+  bind:this={myCanvas}
+/>
+<!-- {/await} -->
