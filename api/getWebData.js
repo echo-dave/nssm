@@ -19,10 +19,11 @@ const getWebData = (hostname, io) => {
         if (response[0] === 'ok') {
           console.log('webData Response', response)
           dataLoop()
-          if (monitoringState[hostname] !== response.length) {
-            monitoringState[hostname] = response.length
-          }
+          // if (monitoringState[hostname] !== response.length) {
+          //   monitoringState[hostname] = response.length
+          // }
         }
+        // if (response[0] !== 'ok') monitoringState[hostname] = 0
       })
   }
   dataLoop()

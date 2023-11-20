@@ -76,8 +76,8 @@ export default async (thresholds) => {
     }
   })
 
-  app.get('/api/tsClientData/count/:count', async (req, res) => {
-    const data = await getHistory(req.params.count, serverName)
+  app.get('/api/tsClientData/:server/:count', async (req, res) => {
+    const data = await getHistory(req.params.count, req.params.server)
     res.status(200).json(data)
   })
 

@@ -5,6 +5,7 @@
   export let metrics
   export let subscribe
   export let unsubscribe
+  export let hostname
   let hostmenutoggle = false
   let currentHost
   //storing a pending promise because svelt needs to await data from the onMount
@@ -38,6 +39,7 @@
       el.time = new Date(el.time)
     })
     currentHost = name
+    hostname = currentHost
     metrics = resp.reverse()
     // metrics = resp
   }

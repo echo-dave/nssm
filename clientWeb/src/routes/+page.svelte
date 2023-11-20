@@ -73,7 +73,7 @@
   const updateDataPoints = async (count) => {
     try {
       if (count > metrics.length + 1) {
-        let res = await fetch(`/api/tsClientData/count/${count}`)
+        let res = await fetch(`/api/tsClientData/${hostname}/${count}`)
         if (!res.ok) {
           throw new Error({ error: res, msg: 'Failed to get client data' })
         }
@@ -101,7 +101,7 @@
     <div class="left no-border">
       <div id="time-buttons" class="no-border">
         {#each time as timeElement}
-          <TimeScaleButton bind:minutes time={timeElement} {changeDataLength} />
+          <TimeScaleButton bind:minutes bind:hostname time={timeElement} {changeDataLength} />
         {/each}
       </div>
       <span id="lineCharInfo">History for the last {minutes} minutes</span>
