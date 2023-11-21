@@ -41,6 +41,9 @@
       },
       legend: {
         display: false
+      },
+      tooltip: {
+        enabled: false
       }
     }
   }
