@@ -5,6 +5,8 @@
   export let metrics
   export let subscribe
   export let unsubscribe
+  export let minutes
+  export let hostname
   let hostmenutoggle = false
   let currentHost
   //storing a pending promise because svelt needs to await data from the onMount
@@ -31,13 +33,14 @@
     unsubscribe(currentHost)
     console.log('unsub: ', currentHost)
     subscribe(name)
-    let resp = await fetch(`/api/serverchange/${name}`)
+    let resp = await fetch(`/api/serverchange/${name}/${minutes * 30}`)
     if (!resp.ok) throw new Error(resp.status)
     resp = await resp.json()
     resp.map((el) => {
       el.time = new Date(el.time)
     })
     currentHost = name
+    hostname = currentHost
     metrics = resp.reverse()
     // metrics = resp
   }

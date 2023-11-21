@@ -73,7 +73,7 @@
   const updateDataPoints = async (count) => {
     try {
       if (count > metrics.length + 1) {
-        let res = await fetch(`/api/tsClientData/count/${count}`)
+        let res = await fetch(`/api/tsClientData/${hostname}/${count}`)
         if (!res.ok) {
           throw new Error({ error: res, msg: 'Failed to get client data' })
         }
@@ -95,7 +95,7 @@
   <meta name="description" content="Nodesysmon a simple system monitor" />
 </svelte:head>
 <div id="wrap" class="no-border">
-  <Header bind:metrics {subscribe} {unsubscribe} />
+  <Header bind:metrics bind:hostname {subscribe} {unsubscribe} {minutes} />
 
   <div id="chartTimeScaleButtons" class="no-border">
     <div class="left no-border">
