@@ -43,6 +43,8 @@ const options = {
       }
     },
     tooltip: {
+      enabled: () => (window.innerWidth > 720 ? true : false),
+
       position: 'toolTipPositioner',
       callbacks: {
         footer: (context) => {

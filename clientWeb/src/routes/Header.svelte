@@ -136,7 +136,7 @@
     <li>
       Mem Reported: {metrics?.at(-1)?.totalMem}M
     </li>
-    <li style="color: magenta;">
+    <li class="time">
       {currentTime}
     </li>
   </ul>
@@ -180,7 +180,9 @@
     visibility: visible;
     display: inline-block;
   }
-
+  .time {
+    color: var(--time-color);
+  }
   #hostnames li:hover {
     color: aqua;
     margin-left: -1.4em;
@@ -223,16 +225,6 @@
     margin-top: calc(50% - 0.5em);
     font-size: 0.7em;
     margin-left: 0.5em;
-  }
-  .fade-in {
-    opacity: 0;
-    animation: fade-in 0.25s ease-in forwards;
-  }
-
-  @keyframes fade-in {
-    100% {
-      opacity: 1;
-    }
   }
 
   @media screen and (max-width: 720px) {

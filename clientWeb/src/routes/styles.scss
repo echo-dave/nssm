@@ -19,6 +19,8 @@
     --borderColor: rgb(17, 217, 217);
     --buttonBackgroundColor: rgb(17, 217, 217);
     --font-main: "Montserrat-Light", Verdana, Geneva, Tahoma, sans-serif;
+    --time-color: #fc2d87;
+    --process-details: #22ecec;
 }
 body {
     background-color: rgb(41, 41, 41);
@@ -122,6 +124,41 @@ button {
         color: whitesmoke;
     }
 }
+#clickProcessValue {
+    position: absolute;
+    margin: 0 auto;
+    top: 4.5em;
+    text-align: center;
+    font-size: 0.75em;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #000;
+    border-radius: 0.5em;
+    padding: 0em 1em;
+    color: var(--hostname-color);
+    z-index: 6;
+}
+
+.fade-in {
+    opacity: 0;
+    animation: fade-in 0.25s ease-in forwards;
+}
+.fade-out {
+    opacity: 100;
+    animation: fade-out 0.15 ease-out forwards;
+}
+
+@keyframes fade-out {
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes fade-in {
+    100% {
+        opacity: 1;
+    }
+}
 
 @media (hover: hover) {
     #time-buttons button:hover {
@@ -129,8 +166,5 @@ button {
         border-radius: 0.5em;
     }
     @media screen and (max-width: 720px) {
-        #chartTimeScaleButtons {
-            // padding: 0.5em;
-        }
     }
 }

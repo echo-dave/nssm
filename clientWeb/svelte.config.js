@@ -11,5 +11,9 @@ export default {
       envPrefix: '',
       polyfill: false
     })
+  },
+  onwarn: (warning, handler) => {
+    if (warning.code === 'a11y-click-events-have-key-events') return handler(warning)
+    if (warning.code === 'a11y-no-noninteractive-element-interactions') return handler(warning)
   }
 }
