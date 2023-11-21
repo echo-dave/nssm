@@ -70,31 +70,26 @@
   }
   $: if (metrics) {
     ;(async () => {
-      myChart.data = await updateData(metrics)
-      // console.log(myChart.data)
+      try {
+        myChart.data = await updateData(metrics)
+        // console.log(myChart.data)
 
-      // console.log('are we updating?')
-      // myChart.destroy()
-      myChart.update()
+        // console.log('are we updating?')
+        // myChart.destroy()
+        myChart.update()
+      } catch (e) {
+        ;('awaiting data')
+      }
     })()
   }
 
+  //on chart click pull all process info onto display
   const getToolTipData = (evt) => {
     const res = myChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true)
-    // console.log(res[0])
-    // If didn't click on a bar, `res` will be an empty array
     if (res.length === 0) {
       return
     }
-    // Alerts "You clicked on A" if you click the "A" chart
-    // alert('You clicked on ' + myChart.data.labels[res[0].index])
     barProcessDetail = myChart.data.datasets[res[0].datasetIndex].data[res[0].index]
-    // console.log(dataElement)
-    // for (const el in dataElement) {
-    //   alertstr += `${el}: ${dataElement[el]}\n`
-    // }
-    // console.log(alertstr)
-    // alert(alertstr)
   }
 </script>
 

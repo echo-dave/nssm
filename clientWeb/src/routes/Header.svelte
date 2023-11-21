@@ -226,16 +226,6 @@
     font-size: 0.7em;
     margin-left: 0.5em;
   }
-  .fade-in {
-    opacity: 0;
-    animation: fade-in 0.25s ease-in forwards;
-  }
-
-  @keyframes fade-in {
-    100% {
-      opacity: 1;
-    }
-  }
 
   @media screen and (max-width: 720px) {
     #liveSysData {

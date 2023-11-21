@@ -17,17 +17,20 @@
   let barProcessDetail
   const ioSubscriptions = new Set()
   export let data
+
   const subscribe = (hostname) => {
     console.log('subscribe to:', hostname)
     ioSubscriptions.add(hostname)
     if (socket.connected) socket.emit('subscribe', hostname)
   }
+
   const unsubscribe = (hostname) => {
     console.log('host to delete', hostname)
     const deleted = ioSubscriptions.delete(hostname)
     console.log('deleted: ', deleted)
     if (deleted && socket.connected) socket.emit('unsubscribe', hostname)
   }
+
   const hostData = (newData) => {
     newData.time = new Date(newData.time)
     metrics = [...metrics, newData]
@@ -44,22 +47,16 @@
       if (ioSubscriptions.size) socket.emit('subscribe', [...ioSubscriptions])
       else subscribe(hostname)
     })
-    // does this work?
+
     socket.on('dataA', (inData, ack) => {
       hostData(inData)
       ack('ok')
-      // console.log('Telemtry data')
     })
 
     socket.on('dataB', (inData, ack) => {
       hostData(inData)
       ack('ok')
-      // console.log('web data - creative')
     })
-
-    // socket.onAny((event, ...args) => {
-    //   console.log('any', event, args)
-    // })
   })
 
   const changeDataLength = () => {
@@ -71,6 +68,7 @@
       updateDataPoints(dataPointsCount)
     }
   }
+
   const updateDataPoints = async (count) => {
     try {
       if (count > metrics.length + 1) {
@@ -88,6 +86,24 @@
     } catch (e) {
       console.warn(e)
     }
+  }
+
+  async function copyProcessInfo(e) {
+    const clipData = await navigator.clipboard.writeText(
+      e.target.closest('.process-value').textContent
+    )
+    const processListItemConted = e.target.closest('.process-details')
+    const processKey = processListItemConted.querySelector('.process-key')
+    document
+      .querySelector('.right ul')
+      .insertAdjacentHTML(
+        'beforebegin',
+        `<span id='clickProcessValue' class='fade-in'><p>Copied <span style='color:white'>${processKey.textContent}'s</span> value!'</p></span>`
+      )
+    setTimeout(() => {
+      document.querySelector('#clickProcessValue').classList.add('fade-out')
+      setTimeout(() => document.querySelector('#clickProcessValue').remove(), 150)
+    }, 2500)
   }
 </script>
 
@@ -109,14 +125,18 @@
     </div>
     <div class="right no-border">
       {#if barProcessDetail}
-        <ul class="process-details">
+        <ul class="process-details" on:click={(e) => copyProcessInfo(e)}>
           {#each Object.entries(barProcessDetail) as [key, value]}
-            <li class="process-details">{key}: <span class="process-value">{value}</span></li>
+            <li class="process-details">
+              <span class="process-key">{key}</span>:
+              <span role="button" class="process-value">{value}</span>
+            </li>
           {/each}
         </ul>
       {/if}
     </div>
   </div>
+
   <section id="main-charts">
     <div class="chart-container no-border">
       <CpuData {metrics} />
@@ -206,25 +226,27 @@
   div.right {
     flex: 1 1;
     text-align: left;
+    position: relative;
+  }
 
-    li.process-details {
-      list-style: none;
-      font-size: 0.85em;
-      display: inline-block;
-      .process-value {
-        color: var(--process-details);
-      }
+  li.process-details {
+    list-style: none;
+    font-size: 0.85em;
+    display: inline-block;
+    .process-value {
+      color: var(--process-details);
+      cursor: pointer;
     }
+  }
 
-    li::after {
-      content: '|';
-      padding: 0 1em;
-      color: var(--time-color);
-    }
+  li::after {
+    content: '|';
+    padding: 0 1em;
+    color: var(--time-color);
+  }
 
-    li:last-child::after {
-      content: none;
-    }
+  li:last-child::after {
+    content: none;
   }
 
   div.left {
