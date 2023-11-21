@@ -98,7 +98,7 @@
       .querySelector('.right ul')
       .insertAdjacentHTML(
         'beforebegin',
-        `<span id='clickProcessValue' class='fade-in'><p>Copied <span style='color:white'>${processKey.textContent}'s</span> value!'</p></span>`
+        `<span id='clickProcessValue' class='fade-in'><p>Copied <span style='color:white'>${processKey.textContent}'s</span> value!</p></span>`
       )
     setTimeout(() => {
       document.querySelector('#clickProcessValue').classList.add('fade-out')

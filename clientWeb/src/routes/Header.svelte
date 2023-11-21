@@ -91,6 +91,13 @@
 </script>
 
 <div id="liveSysData">
+  <a
+    id="githubLink"
+    alt="Github readme"
+    target="_blank"
+    href="https://github.com/echo-dave/nodesysmon/blob/master/ReadMe.md"
+    ><img src="/imgs/github-mark-white.svg" alt="Github Readme" /></a
+  >
   <div class="no-border" style="flex: 1 1;position:relative">
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -150,12 +157,24 @@
   }}
 />
 
-<style>
+<style lang="scss">
   #liveSysData {
     height: 12em;
     display: flex;
     flex-direction: row;
     gap: 3.5em;
+    position: relative;
+  }
+
+  #githubLink {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+
+    img {
+      width: 2em;
+      height: 2em;
+    }
   }
   .hostname {
     font-size: 1.25em;
