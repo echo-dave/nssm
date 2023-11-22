@@ -7,6 +7,8 @@
   import MemData from '$lib/charts/MemData.svelte'
   import TimeScaleButton from './TimeScaleButton.svelte'
   import Processes from '../lib/charts/Processes.svelte'
+  // import { env } from '$env/dynamic/public'
+  import { PUBLIC_BASE_URL } from '$env/static/public'
 
   const socket = io()
   let metrics
@@ -110,7 +112,10 @@
 <svelte:head>
   <title>Simple System Monitor</title>
   <meta name="description" content="Nodesysmon a simple system monitor" />
+  <meta property="og:title" content="Simple System Monitor" />
+  <meta property="og:image" content="{PUBLIC_BASE_URL}/imgs/ogImg.jpg" />
 </svelte:head>
+
 <div id="wrap" class="no-border">
   <Header bind:metrics bind:hostname {subscribe} {unsubscribe} {minutes} />
 

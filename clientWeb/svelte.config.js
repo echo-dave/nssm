@@ -4,6 +4,7 @@ import { vitePreprocess } from '@sveltejs/kit/vite'
 export default {
   preprocess: [vitePreprocess()],
   kit: {
+    env: { dir: './' },
     adapter: adapter({
       // default options are shown
       out: 'build',
