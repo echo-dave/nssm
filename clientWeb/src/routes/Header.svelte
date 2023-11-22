@@ -138,15 +138,19 @@
       {/await}
     </div>
   </div>
-  <ul id="topMetrics" style="flex: 1 1;">
-    <li><h1>Simple <br />System Monitor</h1></li>
-    <li>
-      Mem Reported: {metrics?.at(-1)?.totalMem}M
-    </li>
-    <li class="time">
-      {currentTime}
-    </li>
-  </ul>
+
+  <div id="topMetrics" style="flex: 1 1;border:none;position:relative">
+    <img id="logo" src="/imgs/ssm_icon.svg" width="75" alt="" />
+    <ul>
+      <li><h1>Simple <br />System Monitor</h1></li>
+      <li>
+        Mem Reported: {metrics?.at(-1)?.totalMem}M
+      </li>
+      <li class="time">
+        {currentTime}
+      </li>
+    </ul>
+  </div>
 </div>
 <svelte:window
   on:click={(e) => {
@@ -220,16 +224,28 @@
   }
 
   #topMetrics {
+    padding-left: 0.5em;
+  }
+  #topMetrics ul {
     margin-top: 1.5em;
     width: 250px;
+    z-index: 1;
   }
+
+  #logo {
+    z-index: -1;
+    position: absolute;
+    left: 6.6em;
+    top: 2em;
+  }
+
   ul {
     list-style-type: none;
   }
   li {
     margin-left: -1.5em;
   }
-  #topMetrics :not(:first-child) {
+  #topMetrics ul :not(:first-child) {
     margin-bottom: 0.15em;
   }
   .currentUsage {
