@@ -269,5 +269,13 @@
       gap: 0.5em;
       padding-bottom: 1.2em;
     }
+    #hostnames {
+      li {
+        padding-top: 0.5em;
+      }
+      li:last-child {
+        padding-bottom: 0.5em;
+      }
+    }
   }
 </style>
