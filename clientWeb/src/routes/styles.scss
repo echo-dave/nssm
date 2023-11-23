@@ -45,7 +45,7 @@ body {
     }
 }
 
-div,
+.border,
 canvas {
     border-radius: 1em;
     border: solid 1px;
@@ -63,16 +63,15 @@ button {
     font-family: var(--font-main);
     text-transform: none;
 }
-.chart-container {
-    display: flex;
-    box-sizing: border-box;
-    flex-direction: column;
-    align-content: start;
-}
+// .chart-container {
+//     display: flex;
+//     box-sizing: border-box;
+//     flex-direction: column;
+//     align-content: start;
+// }
 
 .chart-container,
 .chart-processes {
-    max-width: 100%;
     flex: 1 1;
     overflow: hidden;
     position: relative;
@@ -82,6 +81,8 @@ button {
 .chart-processes canvas,
 .chart-container canvas {
     letter-spacing: normal;
+    max-width: 100%;
+    box-sizing: content-box;
 }
 
 .inner-chart-container,
@@ -134,7 +135,7 @@ button {
     transform: translateX(-50%);
     background-color: #000;
     border-radius: 0.5em;
-    padding: 0em 1em;
+    padding: 0 1em;
     color: var(--hostname-color);
     z-index: 6;
 }
@@ -166,5 +167,8 @@ button {
         border-radius: 0.5em;
     }
     @media screen and (max-width: 720px) {
+        canvas:last-child {
+            margin-bottom: 0;
+        }
     }
 }

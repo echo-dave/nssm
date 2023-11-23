@@ -1,7 +1,7 @@
 //options
 const options = {
   responsive: true,
-  aspectRatio: 1.65,
+  aspectRatio: 1.68,
   maintainAspectRatio: true,
   maxBarThickness: 50,
   barPercentage: 1,

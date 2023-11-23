@@ -116,55 +116,58 @@
   <meta property="og:image" content="{PUBLIC_BASE_URL}/imgs/ogImg.jpg" />
 </svelte:head>
 
-<div id="wrap" class="no-border">
+<div id="wrap">
   <Header bind:metrics bind:hostname {subscribe} {unsubscribe} {minutes} />
-
-  <div id="chartTimeScaleButtons" class="no-border">
-    <div class="left no-border">
-      <div id="time-buttons" class="no-border">
-        {#each time as timeElement}
-          <TimeScaleButton bind:minutes time={timeElement} {changeDataLength} />
-        {/each}
-      </div>
-      <span id="lineCharInfo">History for the last {minutes} minutes</span>
-    </div>
-    <div class="right no-border">
-      {#if barProcessDetail}
-        <ul class="process-details" on:click={(e) => copyProcessInfo(e)}>
-          {#each Object.entries(barProcessDetail) as [key, value]}
-            <li class="process-details">
-              <span class="process-key">{key}</span>:
-              <span role="button" class="process-value">{value}</span>
-            </li>
+  <div id="main-flex-container">
+    <div id="mainLeft">
+      <div class="left">
+        <div id="time-buttons">
+          {#each time as timeElement}
+            <TimeScaleButton bind:minutes time={timeElement} {changeDataLength} />
           {/each}
-        </ul>
-      {/if}
-    </div>
-  </div>
+        </div>
+        <span id="lineCharInfo">History for the last {minutes} minutes</span>
+      </div>
 
-  <section id="main-charts">
-    <div class="chart-container no-border">
-      <CpuData {metrics} />
-      <MemData {metrics} />
+      <div class="chart-container">
+        <CpuData {metrics} />
+        <MemData {metrics} />
+      </div>
     </div>
-    <div class="chart-processes">
-      <button id="swapProcesses" on:click={() => (processDisplayCpu = !processDisplayCpu)}>
-        <img
-          alt="swap process chart sort"
-          src="/imgs/changeProcessChart_white.svg"
-          height="20px"
-          width="20px"
-        />
-      </button>
-      {#if processDisplayCpu === true}
-        <h2 class="chartTitle">Processes by CPU use</h2>
-        <Processes {metrics} cpuMem="cpu" bind:barProcessDetail />
-      {:else}
-        <h2 class="chartTitle">Processes by MEM use</h2>
-        <Processes {metrics} cpuMem="mem" bind:barProcessDetail />
-      {/if}
-    </div>
-  </section>
+
+    <section id="mainRight">
+      <div class="right">
+        {#if barProcessDetail}
+          <ul class="process-details" on:click={(e) => copyProcessInfo(e)}>
+            {#each Object.entries(barProcessDetail) as [key, value]}
+              <li class="process-details">
+                <span class="process-key">{key}</span>:
+                <span role="button" class="process-value">{value}</span>
+              </li>
+            {/each}
+          </ul>
+        {/if}
+      </div>
+
+      <div class="chart-processes">
+        <button id="swapProcesses" on:click={() => (processDisplayCpu = !processDisplayCpu)}>
+          <img
+            alt="swap process chart sort"
+            src="/imgs/changeProcessChart_white.svg"
+            height="20px"
+            width="20px"
+          />
+        </button>
+        {#if processDisplayCpu === true}
+          <h2 class="chartTitle">Processes by CPU use</h2>
+          <Processes {metrics} cpuMem="cpu" bind:barProcessDetail />
+        {:else}
+          <h2 class="chartTitle">Processes by MEM use</h2>
+          <Processes {metrics} cpuMem="mem" bind:barProcessDetail />
+        {/if}
+      </div>
+    </section>
+  </div>
 </div>
 
 <style lang="scss">
@@ -197,22 +200,33 @@
     color: black;
   }
 
-  #chartTimeScaleButtons {
+  #main-flex-container {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
+    gap: 1em;
   }
+
+  // #mainLeft {
+  //   display: flex;
+  //   flex-direction: column;
+  //   justify-content: flex-start;
+  //   flex: 1 1;
+  //   gap: 1.5em;
+  // }
   #lineCharInfo {
     margin-top: 0;
     flex: 0 0;
     font-size: 1.2em;
   }
-  #main-charts {
+  #mainLeft,
+  #mainRight {
     display: flex;
-    flex-direction: row;
-    max-width: 100vw;
+    flex-direction: column;
     gap: 1.5em;
-    justify-content: center;
+    justify-content: flex-start;
+    flex: 1 1;
+    width: 100%;
   }
 
   .chartTitle {
@@ -229,9 +243,9 @@
 
   div.left,
   div.right {
-    flex: 1 1;
     text-align: left;
     position: relative;
+    height: 4.5rem;
   }
 
   li.process-details {
@@ -258,7 +272,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-bottom: 0.75em;
   }
 
   #wrap {
@@ -266,6 +279,7 @@
     margin: 0 auto;
     padding: 0;
   }
+
   @media (hover: hover) {
     #swapProcesses:hover {
       border: var(--hostname-color) solid 1px;
@@ -273,21 +287,35 @@
     }
   }
   @media screen and (max-width: 720px) {
-    #chartTimeScaleButtons {
+    #main-flex-container {
+      flex-direction: column;
+      gap: 0;
+      align-items: center;
+    }
+
+    #mainLeft {
       flex-direction: column;
     }
-    .left {
+    div.left {
       text-align: center;
       margin-top: 0.5em;
       padding-bottom: 0;
+      height: auto;
+      height: 5.5em;
     }
-    #main-charts {
+    #mainRight {
       flex-direction: column;
       gap: 0.75em;
     }
+    div.right {
+      height: auto;
+      ul {
+        padding: 0 0 0 2em;
+      }
+    }
     .chart-container,
     .chart-processes {
-      width: calc(95vw - 0.7em);
+      // width: calc(95vw - 0.7em);
       justify-content: center;
       flex: unset;
     }

@@ -90,7 +90,7 @@
   $: build(metrics)
 </script>
 
-<div id="liveSysData">
+<div id="liveSysData" class="border">
   <a
     id="githubLink"
     alt="Github readme"
@@ -168,6 +168,7 @@
     flex-direction: row;
     gap: 3.5em;
     position: relative;
+    padding-bottom: 0.5em;
   }
 
   #githubLink {
