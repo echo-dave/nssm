@@ -4,6 +4,7 @@ a simple system monitor
 ![cli nodesysmon](readme/cliCombined.jpg)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/7841499643c94833b32b7e366c05c051)](https://app.codacy.com/gh/echo-dave/nodesysmon/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/echo-dave/nodesysmon)
 
+v7 finishes off the front end , some bug fixes, enhancements for barchart  
 v0.6 Rename + web client - ssm and nssm were taken on npm so I've renamed to nodesysmon - this means the git url has changed so you'll need to update url for existing clones. `git@github.com:echo-dave/nodesysmon.git`
 
 ![web client nodesysmon](readme/webcombined.jpg)
@@ -18,6 +19,12 @@ Monitoring realtime CPU, Memory, and process list sorted by cpu / mem
 - local only mode for monitoring current system
 - client cli for monitoring via database
 - client web monitoring via the server
+  - Mobile friendly
+  - Realtime monitoring
+  - Historical monitoring cpu / mem
+  - Process Chart to have see what's using resources
+  - Server switch if you install on more than one server via the same database
+  - Clicking bar chart bars opens up all logged info for the process: clicking values will copy to clipboard
 
 ## Installation
 
@@ -73,6 +80,7 @@ connecting via web browser
 - inquirer for cli prompt for picking which host to monitor
 - Sveltekit for the front end web client
 - Socketio connecting server and client for realtime data
+- ChartsJS
 
 ### How it works
 
@@ -107,7 +115,7 @@ ExecStart=nodesysmon mem=0 cpu=0
 Restart=on-failure
 
 [Install]
-Wantedby=multi-user.target
+WantedBy=multi-user.target
 ```
 
 Last we need to tell systemd to actually enable the service  
